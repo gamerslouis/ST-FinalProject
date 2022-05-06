@@ -1,19 +1,19 @@
-const { createServer } = require('http')
-const Client = require('socket.io-client')
-const { makeIO } = require('./socket')
+import { createServer } from 'http'
+import { AddressInfo } from 'net'
+import { io as Client } from 'socket.io-client'
+import io from './socket'
 
 describe('socket server', () => {
   let clientSocket
   let serverSocket
-  let io
 
   beforeAll(() => {
     return new Promise((done) => {
       const httpServer = createServer()
-      io = makeIO(httpServer)
+      io.attach(httpServer)
       httpServer.listen(() => {
-        const { port } = httpServer.address()
-        clientSocket = new Client(`http://localhost:${port}`)
+        const { port } = httpServer.address() as AddressInfo
+        clientSocket = Client(`http://localhost:${port}`)
         io.on('connection', (socket) => {
           serverSocket = socket
         })
@@ -28,7 +28,7 @@ describe('socket server', () => {
   })
 
   it('can work', () => {
-    return new Promise((done) => {
+    return new Promise<void>((done) => {
       clientSocket.on('hello', (arg) => {
         expect(arg).toBe('world')
         done()
