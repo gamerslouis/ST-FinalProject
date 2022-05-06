@@ -13,7 +13,6 @@
   },
   "plugins": ["import", "jest"],
   "rules": {
-    "arrow-parens": ["error", "as-needed"],
     "no-console": "off",
     "no-else-return": "off",
     "no-plusplus": "off",
