@@ -7,8 +7,8 @@
   "scripts": {
     "build": "webpack --config webpack.prod.js",
     "lint": "eslint --cache --ext .js,.jsx src/",
-    "dev": "cross-env NODE_ENV=development node src/server/index.js",
-    "start": "cross-env NODE_ENV=production node src/server/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon --watch 'src/**/*.ts' --exec ts-node src/server/index.ts",
+    "start": "cross-env NODE_ENV=production nodemon --watch 'src/**/*.ts' --exec ts-node src/server/index.ts",
     "test": "jest --coverage",
     "format": "prettier --write ./src"
   },
