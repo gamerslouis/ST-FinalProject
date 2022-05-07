@@ -1,5 +1,4 @@
 import { IGameObject, Position } from './iGameObject'
-import Constant from '../../shared/constants'
 
 class Bullet implements IGameObject {
   id: string

@@ -1,12 +1,12 @@
 import { Position } from './iGameObject'
-import Bullet from './Bullet'
-import Constant from '../../shared/constants'
+import Bullet from './bullet'
+const Constants = require('../../shared/constants')
 
 describe('bullet', () => {
   it('construct a bullet', () => {
     let pos: Position = { x: 50, y: 60 }
     let direction = ((2 * Math.PI) / 360) * 30
-    let speed = Constant.BULLET_SPEED
+    let speed = Constants.BULLET_SPEED
     let bullet = new Bullet('123', pos, direction, speed)
     expect(bullet.getId()).toEqual('123')
     expect(bullet.getPosition().x).toEqual(50)
@@ -35,7 +35,7 @@ describe('bullet', () => {
 
   it('Should update the location after a interval of time', () => {
     let dt = 1
-    let speed = Constant.BULLET_SPEED
+    let speed = Constants.BULLET_SPEED
     let prePos: Position = { x: 50, y: 60 }
     let direction = ((2 * Math.PI) / 360) * 30
     let bullet = new Bullet('123', prePos, direction, speed)
