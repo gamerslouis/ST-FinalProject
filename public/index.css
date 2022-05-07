@@ -2,7 +2,7 @@ body {
     font-family: 'Varela Round', sans-serif;
     background-color: gray;
 }
-#dialog {
+.centor {
     position: absolute;
     left: 50%;
     top: 50%;
