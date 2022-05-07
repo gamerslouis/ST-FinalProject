@@ -1,7 +1,7 @@
 import { Socket } from 'socket.io'
 import { PlayerUpdateEventType } from './iPlayer'
 import Player from './player'
-const constatns = require('../shared/constants')
+import constants from '../shared/constants'
 
 describe('Player class', () => {
   let username: string, socket: Socket
@@ -28,11 +28,11 @@ describe('Player class', () => {
     const mockEmit = socket.emit as jest.MockedFn<any>
 
     player.update(PlayerUpdateEventType.gameUpdate, {})
-    expect(mockEmit).toBeCalledWith(constatns.MSG_TYPES.GAME_UPDATE, {})
+    expect(mockEmit).toBeCalledWith(constants.MSG_TYPES.GAME_UPDATE, {})
     mockEmit.mockReset()
 
     player.update(PlayerUpdateEventType.playerDead, null)
-    expect(mockEmit).toBeCalledWith(constatns.MSG_TYPES.GAME_OVER, null)
+    expect(mockEmit).toBeCalledWith(constants.MSG_TYPES.GAME_OVER, null)
     mockEmit.mockReset()
   })
   it('can be close', () => {

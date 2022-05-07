@@ -1,4 +1,4 @@
-import { IGameObject } from './iGameObject'
+import { IGameObject, Position } from './iGameObject'
 
 export interface IAirplane extends IGameObject {
   getHealth(): number
