@@ -8,7 +8,8 @@ describe('bullet', () => {
     let direction = ((2 * Math.PI) / 360) * 30
     let speed = Constants.BULLET_SPEED
     let bullet = new Bullet('123', pos, direction, speed)
-    expect(bullet.getId()).toEqual('123')
+    expect(bullet.getParentId()).toEqual('123')
+    expect(typeof bullet.getId()).toBe('string')
     expect(bullet.getPosition().x).toEqual(50)
     expect(bullet.getPosition().y).toEqual(60)
     expect(bullet.getMoveDirection()).toEqual(direction)
