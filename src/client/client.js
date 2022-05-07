@@ -1,7 +1,9 @@
 export default class Client {
-  constructor() {
+  constructor(username) {
+    this.username = username
   }
 
   start() {
+      throw new Error('Method not implemented')
   }
 }
