@@ -31,6 +31,21 @@ describe('Airplane', () => {
   })
 
   describe('update', () => {
-    //   it('Get damage when being hit by Bullet', () => {})
+    it('After accepting the damage, the value of the health have to decrease', () => {
+      let airplane = new Airplane('123')
+      let originHealth = airplane.getHealth()
+      airplane.acceptDamage(5)
+      expect(airplane.getHealth()).toEqual(originHealth - 5)
+    })
+
+    it('Compute currect distance to the certain position', () => {
+      let airplane = new Airplane('123')
+      let airplanePos = airplane.getPosition()
+      let distance = airplane.distanceTo({ x: 100, y: 100 })
+      let dx = airplanePos.x - 100
+      let dy = airplanePos.y - 100
+      let supposedDis = Math.sqrt(dx * dx + dy * dy)
+      expect(distance).toEqual(supposedDis)
+    })
   })
 })

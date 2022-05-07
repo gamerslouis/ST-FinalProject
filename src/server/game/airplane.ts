@@ -12,8 +12,8 @@ class Airplane implements IAirplane {
 
   constructor(playerId: string) {
     this.id = playerId
-    this.position.x = 50
-    this.position.y = 50
+    this.position.x = Constants.PLAYER_ORIGIN_POS_X
+    this.position.y = Constants.PLAYER_ORIGIN_POS_Y
     this.direction = Math.random()
     this.speed = Constants.PLAYER_SPEED
     this.rotation = 0.5
@@ -26,10 +26,9 @@ class Airplane implements IAirplane {
     throw new Error('Method not implemented.')
   }
   acceptDamage(damage: number) {
-    throw new Error('Method not implemented.')
+    this.health -= damage
   }
-  update(dt: number) {
-  }
+  update(dt: number) {}
   getId(): string {
     return this.id
   }
@@ -56,6 +55,12 @@ class Airplane implements IAirplane {
   }
   setMoveDirection(number: any) {
     throw new Error('Method not implemented.')
+  }
+
+  distanceTo(targetPosition: Position): number {
+    const dx = this.position.x - targetPosition.x
+    const dy = this.position.y - targetPosition.y
+    return Math.sqrt(dx * dx + dy * dy)
   }
 }
 
