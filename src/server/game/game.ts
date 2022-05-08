@@ -41,11 +41,11 @@ class Game implements IGameControl {
       }
     })
 
-		// Send update to each player
-		Object.keys(this.players).forEach(playerID => {
-			/* TODO */
-			this.players[playerID].update(PlayerUpdateEventType.gameUpdate, {});
-		});
+    // Send update to each player
+    Object.keys(this.players).forEach((playerID) => {
+      /* TODO */
+      this.players[playerID].update(PlayerUpdateEventType.gameUpdate, {})
+    })
   }
 
   addPlayer(newPlayer: IPlayer) {
@@ -53,7 +53,7 @@ class Game implements IGameControl {
     this.airplanes[newPlayer.getId()] = new Airplane(newPlayer.getId())
   }
   removePlayer(playerId: string) {
-		this.players[playerId].update(PlayerUpdateEventType.playerDead)
+    this.players[playerId].update(PlayerUpdateEventType.playerDead)
     delete this.players[playerId]
     delete this.airplanes[playerId]
   }

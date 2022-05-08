@@ -59,7 +59,6 @@ describe('Game input manage module', () => {
       key: 'e',
       state: 1,
     })
-
   })
 
   it('can dettach handlers', () => {

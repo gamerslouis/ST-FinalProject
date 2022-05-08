@@ -29,7 +29,7 @@ describe('Game', () => {
     const player2 = new Player(playerId2, undefined)
     game.players[playerId1] = player1
     game.players[playerId2] = player2
-    
+
     jest.spyOn(player1, 'update')
     jest.spyOn(player2, 'update')
     game.update()
