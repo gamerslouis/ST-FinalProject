@@ -1,17 +1,17 @@
 import { IPlayer } from '../iPlayer'
 
-enum PlayerInputState {
+export enum PlayerInputState {
   Press = 0,
   Release = 1,
 }
 
-type PlayerInputEvent = {
+export type PlayerInputEvent = {
   key: string
   state: PlayerInputState
 }
 
 export interface IGameControl {
-  update(dt: number)
+  update()
   addPlayer(newPlayer: IPlayer)
   removePlayer(playerId: string)
   handleInput(playerId: string, event: PlayerInputEvent)

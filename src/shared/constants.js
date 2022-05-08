@@ -16,4 +16,7 @@ module.exports = Object.freeze({
     GAME_UPDATE: 'update',
     GAME_OVER: 'dead',
   },
+  INPUT_EVENTS: {
+    MOUSE: 'mouse',
+  },
 })

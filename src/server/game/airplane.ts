@@ -23,7 +23,7 @@ class Airplane implements IAirplane {
     return this.health
   }
   setHealth(newHealth: number) {
-    throw new Error('Method not implemented.')
+    this.health = newHealth
   }
   acceptDamage(damage: number) {
     this.health -= damage
