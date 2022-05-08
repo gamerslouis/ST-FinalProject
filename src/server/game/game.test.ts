@@ -2,7 +2,7 @@ import Player from '../player'
 import Game from './game'
 import Airplane from './airplane'
 import Bullet from './bullet'
-import Constants from '../../shared/constants'
+import Constants, { MOVE_DELTA_RAD } from '../../shared/constants'
 import { PlayerInputState } from './iGameControl'
 
 jest.mock('../player')
@@ -72,6 +72,46 @@ describe('Game', () => {
       })
       expect(game.bullets).toHaveLength(1)
       expect(game.bullets[0].parentId).toBe(playerID)
+    })
+
+    it('Left arrow key update the airplane to trun left', () => {
+      const game = new Game()
+      const playerID = '123'
+      const airplane = new Airplane(playerID)
+      game.airplanes[playerID] = airplane
+
+      jest.runOnlyPendingTimers()
+
+      /* Press left arrow key */
+      let preDirection = game.airplanes[playerID].getMoveDirection()
+      game.handleInput(playerID, {
+        key: Constants.INPUT_EVENTS.LEFT_ARROW_KEY,
+        state: PlayerInputState.Press,
+      })
+      let computeDir = preDirection + MOVE_DELTA_RAD
+      expect(game.airplanes[playerID].getMoveDirection()).toBeCloseTo(
+        computeDir
+      )
+    })
+
+    it('Right arrow key update the airplane to trun right', () => {
+      const game = new Game()
+      const playerID = '123'
+      const airplane = new Airplane(playerID)
+      game.airplanes[playerID] = airplane
+
+      jest.runOnlyPendingTimers()
+
+      /* Press right arrow key */
+      let preDirection = game.airplanes[playerID].getMoveDirection()
+      game.handleInput(playerID, {
+        key: Constants.INPUT_EVENTS.RIGHT_ARROW_KEY,
+        state: PlayerInputState.Press,
+      })
+      let computeDir = preDirection - MOVE_DELTA_RAD
+      expect(game.airplanes[playerID].getMoveDirection()).toBeCloseTo(
+        computeDir
+      )
     })
   })
 })

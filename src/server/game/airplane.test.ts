@@ -47,5 +47,23 @@ describe('Airplane', () => {
       let supposedDis = Math.sqrt(dx * dx + dy * dy)
       expect(distance).toEqual(supposedDis)
     })
+
+    it('Update position on a interval time, which should be in a map', () => {
+      let airplane = new Airplane('123')
+      let dt = 1
+      let speed = airplane.getSpeed()
+      const prePosX = airplane.getPosition().x
+      const prePosY = airplane.getPosition().y
+      const direction = airplane.getMoveDirection()
+
+      airplane.update(dt)
+
+      const computeX = prePosX + dt * speed * Math.sin(direction)
+      const computeY = prePosY - dt * speed * Math.cos(direction)
+      const expectX = Math.max(0, Math.min(Constants.MAP_SIZE, computeX))
+      const expectY = Math.max(0, Math.min(Constants.MAP_SIZE, computeY))
+      expect(airplane.getPosition().x).toBeCloseTo(expectX)
+      expect(airplane.getPosition().y).toBeCloseTo(expectY)
+    })
   })
 })

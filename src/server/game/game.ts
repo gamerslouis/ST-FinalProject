@@ -67,7 +67,16 @@ class Game implements IGameControl {
             )
           )
         break
-
+      case Constants.INPUT_EVENTS.LEFT_ARROW_KEY:
+        if (event.state == PlayerInputState.Press) {
+          this.airplanes[playerId].setMoveDirection(Constants.MOVE_DELTA_RAD)
+        }
+        break
+      case Constants.INPUT_EVENTS.RIGHT_ARROW_KEY:
+        if (event.state == PlayerInputState.Press) {
+          this.airplanes[playerId].setMoveDirection(-Constants.MOVE_DELTA_RAD)
+        }
+        break
       default:
         break
     }
