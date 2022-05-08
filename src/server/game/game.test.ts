@@ -21,6 +21,22 @@ describe('Game', () => {
     expect(game.lastUpdateTime).not.toEqual(initCreatedTime)
   })
 
+  it('Send update to each player', () => {
+    const game = new Game()
+    const playerId1 = '123'
+    const playerId2 = '456'
+    const player1 = new Player(playerId1, undefined)
+    const player2 = new Player(playerId2, undefined)
+    game.players[playerId1] = player1
+    game.players[playerId2] = player2
+    
+    jest.spyOn(player1, 'update')
+    jest.spyOn(player2, 'update')
+    game.update()
+    expect(player1.update).toBeCalledTimes(1)
+    expect(player2.update).toBeCalledTimes(1)
+  })
+
   it('Add a player with player id', () => {
     Player.prototype.getId = jest.fn(() => '123')
     const player = new Player('123', undefined)
@@ -43,6 +59,16 @@ describe('Game', () => {
     jest.runOnlyPendingTimers()
     expect(game.airplanes[playerId]).not.toBeDefined()
     expect(game.players[playerId]).not.toBeDefined()
+  })
+
+  it('Update player when they are removed', () => {
+    const playerId = '123'
+    const game = new Game()
+    const player = new Player(playerId, undefined)
+    game.players[playerId] = player
+    jest.spyOn(player, 'update')
+    game.removePlayer(playerId)
+    expect(player.update).toBeCalledTimes(1)
   })
 
   it('A bullet vanish when hit other player', () => {

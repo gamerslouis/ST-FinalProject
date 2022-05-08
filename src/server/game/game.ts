@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io'
 import Constants from '../../shared/constants'
-import { IPlayer } from '../iPlayer'
+import { IPlayer, PlayerUpdateEventType } from '../iPlayer'
 import Airplane from './airplane'
 import Bullet from './bullet'
 import { checkCollisionToBullets } from './collision'
@@ -40,6 +40,12 @@ class Game implements IGameControl {
         this.removePlayer(playerID)
       }
     })
+
+		// Send update to each player
+		Object.keys(this.players).forEach(playerID => {
+			/* TODO */
+			this.players[playerID].update(PlayerUpdateEventType.gameUpdate, {});
+		});
   }
 
   addPlayer(newPlayer: IPlayer) {
@@ -47,6 +53,7 @@ class Game implements IGameControl {
     this.airplanes[newPlayer.getId()] = new Airplane(newPlayer.getId())
   }
   removePlayer(playerId: string) {
+		this.players[playerId].update(PlayerUpdateEventType.playerDead)
     delete this.players[playerId]
     delete this.airplanes[playerId]
   }
