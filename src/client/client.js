@@ -4,6 +4,6 @@ export default class Client {
   }
 
   start() {
-      throw new Error('Method not implemented')
+    throw new Error('Method not implemented')
   }
 }

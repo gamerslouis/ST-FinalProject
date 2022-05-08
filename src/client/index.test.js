@@ -2,9 +2,6 @@ import initScript from './index'
 import Client from './client'
 
 jest.mock('./client')
-// Client.mockImplementation(() => {
-//   return {}
-// })
 
 describe('Index page logic', () => {
   beforeAll(() => {
