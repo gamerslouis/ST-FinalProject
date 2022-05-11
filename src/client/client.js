@@ -15,17 +15,17 @@ export default class Client {
 
   start() {
     Promise.all([
-      network.connect(),
+      this.network.connect(),
       //downloadAssets(),
     ]).then(() => {
       let state = new State();
-      input.attach();
+      this.input.attach();
       //startRendering();
     });
   }
 
   gameOver() {
-    input.dettach();
+    this.input.dettach();
     //stopRendering();
   }
 }
