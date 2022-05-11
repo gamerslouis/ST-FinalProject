@@ -43,8 +43,25 @@ class Game implements IGameControl {
 
     // Send update to each player
     Object.keys(this.players).forEach((playerID) => {
-      /* TODO */
-      this.players[playerID].update(PlayerUpdateEventType.gameUpdate, {})
+      const nearbyAirplanes = Object.values(this.airplanes).filter(
+        (p) =>
+          p !== this.airplanes[playerID] &&
+          this.airplanes[playerID].distanceTo(
+            this.airplanes[playerID].getPosition()
+          ) <=
+            Constants.MAP_SIZE / 2
+      )
+      const nearbyBullets = this.bullets.filter(
+        (b) =>
+          b.distanceTo(this.airplanes[playerID].getPosition()) <=
+          Constants.MAP_SIZE / 2
+      )
+      this.players[playerID].update(PlayerUpdateEventType.gameUpdate, {
+        t: Date.now(),
+        self: this.airplanes[playerID],
+        airplanes: nearbyAirplanes,
+        bullets: nearbyBullets,
+      })
     })
   }
 

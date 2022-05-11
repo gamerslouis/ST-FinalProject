@@ -8,9 +8,9 @@ import State from './state'
 
 export default class Client {
   constructor(username) {
-    this.username = username;
-    this.network = new NetworkManager();
-    this.input = new InputManager(this.network.getSocket());
+    this.username = username
+    this.network = new NetworkManager()
+    this.input = new InputManager(this.network.getSocket())
   }
 
   start() {
@@ -18,14 +18,14 @@ export default class Client {
       this.network.connect(),
       //downloadAssets(),
     ]).then(() => {
-      let state = new State();
-      this.input.attach();
+      let state = new State()
+      this.input.attach()
       //startRendering();
-    });
+    })
   }
 
   gameOver() {
-    this.input.dettach();
+    this.input.dettach()
     //stopRendering();
   }
 }

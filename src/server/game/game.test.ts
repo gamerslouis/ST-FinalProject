@@ -4,6 +4,7 @@ import Airplane from './airplane'
 import Bullet from './bullet'
 import Constants, { MOVE_DELTA_RAD } from '../../shared/constants'
 import { PlayerInputState } from './iGameControl'
+import { PlayerUpdateEventType } from '../iPlayer'
 
 jest.mock('../player')
 jest.useFakeTimers()
@@ -25,16 +26,40 @@ describe('Game', () => {
     const game = new Game()
     const playerId1 = '123'
     const playerId2 = '456'
-    const player1 = new Player(playerId1, undefined)
-    const player2 = new Player(playerId2, undefined)
-    game.players[playerId1] = player1
-    game.players[playerId2] = player2
+    const socket = {
+      id: '1234',
+      emit: jest.fn(),
+    }
+    Player.prototype.getId = jest.fn().mockReturnValue(playerId1)
+    const player1 = new Player(playerId1, socket)
+    game.addPlayer(player1)
+    Player.prototype.getId = jest.fn().mockReturnValue(playerId2)
+    const player2 = new Player(playerId2, socket)
+    game.addPlayer(player2)
 
     jest.spyOn(player1, 'update')
     jest.spyOn(player2, 'update')
     game.update()
     expect(player1.update).toBeCalledTimes(1)
     expect(player2.update).toBeCalledTimes(1)
+    expect(player1.update).toBeCalledWith(
+      PlayerUpdateEventType.gameUpdate,
+      expect.objectContaining({
+        t: expect.any(Number),
+        self: expect.objectContaining({ id: playerId1 }),
+        airplanes: expect.anything(),
+        bullets: expect.anything(),
+      })
+    )
+    expect(player2.update).toBeCalledWith(
+      PlayerUpdateEventType.gameUpdate,
+      expect.objectContaining({
+        t: expect.any(Number),
+        self: expect.objectContaining({ id: playerId2 }),
+        airplanes: expect.anything(),
+        bullets: expect.anything(),
+      })
+    )
   })
 
   it('Add a player with player id', () => {
