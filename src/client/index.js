@@ -1,4 +1,58 @@
 import Client from './client'
+import InputManager from './input';
+import State from './state';
+import render from './render';
+import { downloadAssets } from './assets';
+import './css/main.css';
+
+
+// Get the dialog and btn
+const playMenu = document.getElementById('dialog');
+const playButton = document.getElementById('enter-game-btn');
+const usernameInput = document.getElementById('username-input');
+
+const renderData = {
+  me: {
+      x: 200,
+      y: 0,
+      rot: 1.27,
+      health: 90
+  },
+  spaces: [
+      {
+          x: 300,
+          y: 100,
+          rot: 1,
+          health: 45
+      }
+  ],
+  bullets: [
+      {
+          x: 210,
+          y: 150,
+          rot: 3.6
+      }
+  ]    
+};
+
+
+Promise.all([
+  downloadAssets(),
+  usernameInput.focus(),
+]).then(() => {
+  playButton.onclick = () => {
+    // Initialize
+    playMenu.classList.add('invisible');
+    let state = new State();
+    
+    // let inputmanager = InputManager();
+    // inputmanager.attach();
+    
+    render(renderData);
+
+  };
+}).catch(console.error);
+
 
 export default function initScript() {
   document.getElementById('enter-game-btn').addEventListener('click', () => {
