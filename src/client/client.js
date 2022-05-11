@@ -9,8 +9,8 @@ import State from './state'
 export default class Client {
   constructor(username) {
     this.username = username;
-    let network = new NetworkManager();
-    let input = new InputManager(network.getSocket());
+    this.network = new NetworkManager();
+    this.input = new InputManager(this.network.getSocket());
   }
 
   start() {
