@@ -1,4 +1,5 @@
 
+import { debounce } from 'throttle-debounce';
 import { getAsset } from './assets';
 import { getCurrentState } from './state';
 
@@ -8,13 +9,30 @@ const { PLAYER_RADIUS, PLAYER_MAX_HP, BULLET_RADIUS, MAP_SIZE } = Constants;;
 // Get the canvas graphics context
 const canvas = document.getElementById('canvas');
 const context = canvas.getContext('2d');
-//window.addEventListener('resize', debounce(40, setCanvasDimensions));
+setCanvasDimensions();
 
+
+// On small screens (e.g. phones), we want to "zoom out" so players can still see at least
+// 800 in-game units of width.
+function setCanvasDimensions() {
+    const scaleRatio = Math.max(1, 800 / window.innerWidth);
+    canvas.width = scaleRatio * window.innerWidth;
+    canvas.height = scaleRatio * window.innerHeight;
+}
+
+
+// debounce setCanvasDimention()
+window.addEventListener('resize', debounce(40, setCanvasDimensions));
 let animationFrameRequestId;
-export default function render(renderData){
+
+// Note : Player itself is located at (canvas.width * 1/2, canvas.height * 1/5)
+function render(renderData){
     //const { me, others, bullets } = getCurrentState();
-    setCanvasDimensions();
-    //renderBackground(renderData.me.x, renderData.me.y);
+    const mycenterX = canvas.width / 2;
+    const mycenterY = canvas.height * 4 / 5;
+    
+    renderBackground(renderData.me);
+    
     // Player
     renderPlayer(renderData.me, renderData.me, 0);
 
@@ -24,33 +42,42 @@ export default function render(renderData){
     // Bullets
     //bullets.forEach(renderBullet.bind(null, me));
     renderBullet(renderData.me, renderData.bullets[0]);
-    
+    animationFrameRequestId = requestAnimationFrame(render);
 }
 
-
-function setCanvasDimensions() {
-    // On small screens (e.g. phones), we want to "zoom out" so players can still see at least
-    // 800 in-game units of width.
-    const scaleRatio = Math.max(1, 800 / window.innerWidth);
-    canvas.width = scaleRatio * window.innerWidth;
-    canvas.height = scaleRatio * window.innerHeight;
-}
-
-
-
-/*
-function renderBackground(x, y) {
+function renderBackground(me) {
+    const { x, y, health, rot } = me;
+    // map y to canvas coordinate
+    const y_in_canvas = canvas.height - y;
+ 
     const mycenterX = canvas.width / 2;
     const mycenterY = canvas.height * 4 / 5;
-    const backgroundX = MAP_SIZE / 2 - x + mycenterX;
-    const backgroundY = MAP_SIZE / 2 - y + mycenterY;
     const background_img = getAsset('background.jpg');
-    context.drawImage(background_img, backgroundX, backgroundY); 
+    
+    // rotation
+    context.save();
+    context.translate(mycenterX, mycenterY);
+    context.rotate(-me.rot);
+    context.translate(-mycenterX, -mycenterY);
+
+    // Size of background image
+    const bgw = MAP_SIZE + canvas.width;
+    const bgh = MAP_SIZE + canvas.height;
+
+    // ref : https://blog.csdn.net/kidoo1012/article/details/75174884
+    context.drawImage(
+        background_img,
+        x, (MAP_SIZE - y), //top left corner of img (sx, sy), note that MAP_SIZE = (bgh - canvas.height - y)
+        canvas.width, canvas.height, //How big of the grab
+        0, 0, // put on the left corner on the window
+        bgw, bgh //size of what was grabed
+    ); 
+    context.restore();
+
 }
-*/
 
 
-// Note : Player itself is located at (canvas.width * 1/2, canvas.height * 1/5)
+
 function renderPlayer(me, player, charcter=1) {
     const { x, y, health, rot } = player;
     
@@ -126,7 +153,7 @@ function renderBullet(me, bullet) {
 }
 
 
-/*
+
 function renderMainMenu() {
     const t = Date.now() / 7500;
     const x = MAP_SIZE / 2 + 800 * Math.cos(t);
@@ -140,8 +167,7 @@ function renderMainMenu() {
 animationFrameRequestId = requestAnimationFrame(renderMainMenu);
 
 // Replaces main menu rendering with game rendering.
-export function startRendering() {
+export function startRendering(renderData) {
     cancelAnimationFrame(animationFrameRequestId);
-    animationFrameRequestId = requestAnimationFrame(render);
+    animationFrameRequestId = requestAnimationFrame(render(renderData));
 }
-*/

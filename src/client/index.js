@@ -2,6 +2,7 @@ import Client from './client'
 import InputManager from './input';
 import State from './state';
 import render from './render';
+import {startRendering} from './render';
 import { downloadAssets } from './assets';
 import './css/main.css';
 
@@ -14,8 +15,8 @@ const usernameInput = document.getElementById('username-input');
 const renderData = {
   me: {
       x: 200,
-      y: 0,
-      rot: 1.27,
+      y: 300,
+      rot: 3.14,
       health: 90
   },
   spaces: [
@@ -29,7 +30,7 @@ const renderData = {
   bullets: [
       {
           x: 210,
-          y: 150,
+          y: 500,
           rot: 3.14
       }
   ]    
@@ -45,14 +46,14 @@ Promise.all([
     playMenu.classList.add('invisible');
     let state = new State();
     
-    // let inputmanager = InputManager();
-    // inputmanager.attach();
+    //let inputmanager = InputManager();
+    //inputmanager.attach();
     
-    render(renderData);
+    //startRendering();
+    startRendering(renderData);
 
   };
 }).catch(console.error);
-
 
 export default function initScript() {
   document.getElementById('enter-game-btn').addEventListener('click', () => {
