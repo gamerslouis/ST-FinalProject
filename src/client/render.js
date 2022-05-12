@@ -93,14 +93,15 @@ function renderPlayer(me, player, character=1) {
 
     // me.rotation is background's job
     if(character != 0){
+        context.translate(mycenterX, mycenterY);
+        context.rotate(me.rot);
+        context.translate(-mycenterX, -mycenterY);
+
         // rotate itself
         context.translate(canvasX, canvasY );
         context.rotate(- rot);
         context.translate(-canvasX, -canvasY );
 
-        context.translate(mycenterX, mycenterY);
-        context.rotate(me.rot);
-        context.translate(-mycenterX, -mycenterY);
     }
 
     // Health bar

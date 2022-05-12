@@ -16,14 +16,14 @@ const renderData = {
   me: {
       x: 0,
       y: 0,
-      rot:0,
+      rot:0.3,
       health: 90
   },
   spaces: [
       {
           x: 200,
           y: 400,
-          rot: 1.56,
+          rot: 3.14,
           health: 45
       }
   ],
