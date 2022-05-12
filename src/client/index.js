@@ -21,7 +21,7 @@ const renderData = {
   spaces: [
       {
           x: 300,
-          y: 100,
+          y: 400,
           rot: 1,
           health: 45
       }
@@ -30,7 +30,7 @@ const renderData = {
       {
           x: 210,
           y: 150,
-          rot: 3.6
+          rot: 3.14
       }
   ]    
 };
