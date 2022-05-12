@@ -14,23 +14,23 @@ const usernameInput = document.getElementById('username-input');
 
 const renderData = {
   me: {
-      x: 200,
-      y: 300,
-      rot: 3.14,
+      x: 0,
+      y: 0,
+      rot:0,
       health: 90
   },
   spaces: [
       {
-          x: 300,
+          x: 200,
           y: 400,
-          rot: 1,
+          rot: 1.56,
           health: 45
       }
   ],
   bullets: [
       {
-          x: 210,
-          y: 500,
+          x: 0,
+          y: 100,
           rot: 3.14
       }
   ]    
@@ -41,7 +41,7 @@ Promise.all([
   downloadAssets(),
   usernameInput.focus(),
 ]).then(() => {
-  playButton.onclick = () => {
+  //playButton.onclick = () => {
     // Initialize
     playMenu.classList.add('invisible');
     let state = new State();
@@ -52,7 +52,7 @@ Promise.all([
     //startRendering();
     startRendering(renderData);
 
-  };
+  //};
 }).catch(console.error);
 
 export default function initScript() {
