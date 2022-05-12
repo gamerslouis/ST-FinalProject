@@ -63,15 +63,17 @@ function renderBackground(me) {
     context.translate(-mycenterX, -mycenterY);
 
     // Size of background image
-    const bgw = MAP_SIZE + canvas.width;
-    const bgh = MAP_SIZE + canvas.height;
+    const bgw = MAP_SIZE + canvas.width  * 2;
+    const bgh = MAP_SIZE + canvas.height * 2;
+    let edge = MAP_SIZE * 1 / 2;
+
 
     context.drawImage(
         background_img,
-        x, (MAP_SIZE - y), //top left corner of img (sx, sy), note that MAP_SIZE = (bgh - canvas.height - y)
+        x, (MAP_SIZE - y) - edge * 1/5, //top left corner of img (sx, sy), note that MAP_SIZE = (bgh - canvas.height - y)
         canvas.width, canvas.height, //How big of the grab
-        0, 0, // put on the left corner on the window
-        bgw, bgh //size of what was grabed
+        -edge , -edge , // put on the left corner on the window
+        bgw, bgh + edge //size of what was grabed
     ); 
     context.restore();
     return [x, (MAP_SIZE - y)];
