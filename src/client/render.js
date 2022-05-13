@@ -4,9 +4,6 @@ import { getAsset } from './assets'
 const Constants = require('../shared/constants')
 const { PLAYER_RADIUS, PLAYER_MAX_HP, BULLET_RADIUS, MAP_SIZE } = Constants
 
-// Animation
-let animationFrameRequestId
-
 export default class Render {
   constructor(canvas, context, window) {
     this.window = window
@@ -19,11 +16,8 @@ export default class Render {
       debounce(40, this.setCanvasDimensions)
     )
 
-    // Don't use arrow function : https://localcoder.org/using-es6-arrow-functions-inside-class
+    // Bind
     this.render = this.render.bind(this)
-    this.startRendering = this.startRendering.bind(this)
-    this.stopRendering = this.stopRendering.bind(this)
-
     this.renderBackground = this.renderBackground.bind(this)
     this.renderPlayer = this.renderPlayer.bind(this)
     this.renderBullet = this.renderBullet.bind(this)
@@ -50,8 +44,6 @@ export default class Render {
 
     // Bullets
     bullets.forEach(this.renderBullet.bind(null, me))
-
-    animationFrameRequestId = requestAnimationFrame(this.render)
   }
 
   renderBackground(me) {
@@ -150,15 +142,14 @@ export default class Render {
     const mycenterX = this.canvas.width / 2
     const mycenterY = (this.canvas.height * 4) / 5
 
-    // Rotate
-    this.context.save()
-    this.context.translate(mycenterX, mycenterY)
-    this.context.rotate(me.rot - rot)
-    this.context.translate(-mycenterX, -mycenterY)
-
     // Get Bullet x, y
     let canvasX = mycenterX + (x - me.x) - BULLET_RADIUS
     let canvasY = mycenterY - (y - me.y - BULLET_RADIUS)
+
+    // Rotate
+    this.context.translate(canvasX, canvasY)
+    this.context.rotate(-rot)
+    this.context.translate(-canvasX, -canvasY)
 
     // Draw the bullet
     this.context.drawImage(
@@ -169,29 +160,5 @@ export default class Render {
       BULLET_RADIUS * 10
     )
     this.context.restore()
-  }
-
-  renderMainMenu() {
-    const t = Date.now() / 7500
-    const x = MAP_SIZE / 2 + 800 * Math.cos(t)
-    const y = MAP_SIZE / 2 + 800 * Math.sin(t)
-    this.renderBackground(x, y)
-
-    // Rerun this render function on the next frame
-    animationFrameRequestId = requestAnimationFrame(this.renderMainMenu)
-  }
-
-  animationFrameRequestId = requestAnimationFrame(this.renderMainMenu)
-
-  // Replaces main menu rendering with game rendering.
-  startRendering(renderData) {
-    cancelAnimationFrame(animationFrameRequestId)
-    animationFrameRequestId = requestAnimationFrame(this.render(renderData))
-  }
-
-  // Replaces game rendering with main menu rendering.
-  stopRendering() {
-    cancelAnimationFrame(animationFrameRequestId)
-    animationFrameRequestId = requestAnimationFrame(this.renderMainMenu)
   }
 }
