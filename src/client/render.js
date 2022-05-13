@@ -1,194 +1,197 @@
+import { debounce } from 'throttle-debounce'
+import { getAsset } from './assets'
 
-import { debounce } from 'throttle-debounce';
-import { getAsset } from './assets';
-import { getCurrentState } from './state';
-
-const Constants = require('../shared/constants');
-const { PLAYER_RADIUS, PLAYER_MAX_HP, BULLET_RADIUS, MAP_SIZE } = Constants;;
-
-// Get the canvas graphics context
-const canvas = document.getElementById('canvas');
-const context = canvas.getContext('2d');
-setCanvasDimensions();
-
-// Debounce setCanvasDimention()
-window.addEventListener('resize', debounce(40, setCanvasDimensions));
+const Constants = require('../shared/constants')
+const { PLAYER_RADIUS, PLAYER_MAX_HP, BULLET_RADIUS, MAP_SIZE } = Constants
 
 // Animation
-let animationFrameRequestId;
+let animationFrameRequestId
 
+export default class Render {
+  constructor(canvas, context, window) {
+    this.window = window
+    this.canvas = canvas
+    this.context = context
 
-// On small screens (e.g. phones), we want to "zoom out" so players can still see at least
-// 800 in-game units of width.
-function setCanvasDimensions() {
-    const scaleRatio = Math.max(1, 800 / window.innerWidth);
-    canvas.width = scaleRatio * window.innerWidth;
-    canvas.height = scaleRatio * window.innerHeight;
-}
+    this.setCanvasDimensions()
+    this.window.addEventListener(
+      'resize',
+      debounce(40, this.setCanvasDimensions)
+    )
 
+    // Don't use arrow function : https://localcoder.org/using-es6-arrow-functions-inside-class
+    this.render = this.render.bind(this)
+    this.startRendering = this.startRendering.bind(this)
+    this.stopRendering = this.stopRendering.bind(this)
 
-// Note : Player itself is located at (canvas.width * 1/2, canvas.height * 1/5)
-function render(renderData){
-    //const { me, others, bullets } = getCurrentState();
-    const mycenterX = canvas.width / 2;
-    const mycenterY = canvas.height * 4 / 5;
-    
-    renderBackground(renderData.me);
-    
+    this.renderBackground = this.renderBackground.bind(this)
+    this.renderPlayer = this.renderPlayer.bind(this)
+    this.renderBullet = this.renderBullet.bind(this)
+  }
+
+  setCanvasDimensions = () => {
+    const scaleRatio = Math.max(1, 800 / this.window.innerWidth)
+    this.canvas.width = scaleRatio * this.window.innerWidth
+    this.canvas.height = scaleRatio * this.window.innerHeight
+  }
+
+  render(renderData) {
+    // Note : Player itself is located at (canvas.width * 1/2, canvas.height * 1/5)
+
+    const { me, spaces, bullets } = renderData
+
+    this.renderBackground(me)
+
     // Player
-    renderPlayer(renderData.me, renderData.me, 0);
+    this.renderPlayer(me, me, 0)
 
     // Spaces
-    renderPlayer(renderData.me, renderData.spaces[0]);
-    // others.forEach(renderPlayer.bind(null, me));
+    spaces.forEach((space) => this.renderPlayer(me, space))
 
     // Bullets
-    renderBullet(renderData.me, renderData.bullets[0]);
-    //bullets.forEach(renderBullet.bind(null, me));
-    
-    animationFrameRequestId = requestAnimationFrame(render);
-}
+    bullets.forEach(this.renderBullet.bind(null, me))
 
-function renderBackground(me) {
-    const { x, y, health, rot } = me;
-    // map y to canvas coordinate
-    const y_in_canvas = canvas.height - y;
- 
-    const mycenterX = canvas.width / 2;
-    const mycenterY = canvas.height * 4 / 5;
-    const background_img = getAsset('background.jpg');
-    
+    animationFrameRequestId = requestAnimationFrame(this.render)
+  }
+
+  renderBackground(me) {
+    const { x, y, health, rot } = me
+
+    const mycenterX = this.canvas.width / 2
+    const mycenterY = (this.canvas.height * 4) / 5
+    const background_img = getAsset('background.jpg')
+
     // rotation
-    context.save();
-    context.translate(mycenterX, mycenterY);
-    context.rotate(me.rot);
-    context.translate(-mycenterX, -mycenterY);
+    this.context.save()
+    this.context.translate(mycenterX, mycenterY)
+    this.context.rotate(me.rot)
+    this.context.translate(-mycenterX, -mycenterY)
 
     // Size of background image
-    const bgw = MAP_SIZE + canvas.width  * 2;
-    const bgh = MAP_SIZE + canvas.height * 2;
-    let edge = MAP_SIZE * 1 / 2;
+    const bgw = MAP_SIZE + this.canvas.width * 2
+    const bgh = MAP_SIZE + this.canvas.height * 2
+    const edge = (MAP_SIZE * 1) / 2
 
+    this.context.drawImage(
+      background_img,
+      x,
+      MAP_SIZE - y - (edge * 1) / 5, //top left corner of img (sx, sy), note that MAP_SIZE = (bgh - canvas.height - y)
+      this.canvas.width,
+      this.canvas.height, //How big of the grab
+      -edge,
+      -edge, // put on the left corner on the window
+      bgw,
+      bgh + edge //size of what was grabed
+    )
+    this.context.restore()
+    return [x, MAP_SIZE - y]
+  }
 
-    context.drawImage(
-        background_img,
-        x, (MAP_SIZE - y) - edge * 1 / 5, //top left corner of img (sx, sy), note that MAP_SIZE = (bgh - canvas.height - y)
-        canvas.width, canvas.height, //How big of the grab
-        -edge , -edge , // put on the left corner on the window
-        bgw, bgh + edge //size of what was grabed
-    ); 
-    context.restore();
-    return [x, (MAP_SIZE - y)];
-}
+  renderPlayer(me, player, character = 1) {
+    const { x, y, health, rot } = player
 
-
-
-function renderPlayer(me, player, character=1) {
-    const { x, y, health, rot } = player;
-    
     // Rotate around center
-    const mycenterX = canvas.width / 2;
-    const mycenterY = canvas.height * 4 / 5;
-    context.save();
-    
+    const mycenterX = this.canvas.width / 2
+    const mycenterY = (this.canvas.height * 4) / 5
+
     // Player x, y
-    const canvasX = mycenterX + (x - me.x);
-    const canvasY = mycenterY - (y - me.y);
+    const canvasX = mycenterX + (x - me.x)
+    const canvasY = mycenterY - (y - me.y)
+
+    this.context.save()
 
     // me.rotation is background's job
-    if(character != 0){
-        context.translate(mycenterX, mycenterY);
-        context.rotate(me.rot);
-        context.translate(-mycenterX, -mycenterY);
+    if (character != 0) {
+      this.context.translate(mycenterX, mycenterY)
+      this.context.rotate(me.rot)
+      this.context.translate(-mycenterX, -mycenterY)
 
-        // rotate itself
-        context.translate(canvasX, canvasY );
-        context.rotate(- rot);
-        context.translate(-canvasX, -canvasY );
-
+      // rotate itself
+      this.context.translate(canvasX, canvasY)
+      this.context.rotate(-rot)
+      this.context.translate(-canvasX, -canvasY)
     }
 
     // Health bar
-    context.fillStyle = 'red';
-    context.fillRect(
-        canvasX - PLAYER_RADIUS,
-        canvasY + PLAYER_RADIUS + 8,
-        PLAYER_RADIUS * 2,
-        2,
-    );
-    context.fillStyle = 'white';
-    context.fillRect(
-        canvasX - PLAYER_RADIUS + PLAYER_RADIUS * 2 * health/ PLAYER_MAX_HP,
-        canvasY + PLAYER_RADIUS + 8,
-        PLAYER_RADIUS * 2 * (1 - health / PLAYER_MAX_HP),
-        2,
-    );
-    
+    this.context.fillStyle = 'red'
+    this.context.fillRect(
+      canvasX - PLAYER_RADIUS,
+      canvasY + PLAYER_RADIUS + 8,
+      PLAYER_RADIUS * 2,
+      2
+    )
+    this.context.fillStyle = 'white'
+    this.context.fillRect(
+      canvasX - PLAYER_RADIUS + (PLAYER_RADIUS * 2 * health) / PLAYER_MAX_HP,
+      canvasY + PLAYER_RADIUS + 8,
+      PLAYER_RADIUS * 2 * (1 - health / PLAYER_MAX_HP),
+      2
+    )
+
     // Draw the ship / airplane, or maybe other (e.g., charcter 2 is alien.svg)
-    let img = getAsset('airplane.svg');
+    let img = getAsset('airplane.svg')
     if (character != 0) {
-        img = getAsset('ship.svg');
+      img = getAsset('ship.svg')
     }
-    context.drawImage(
-        img,
-        canvasX - PLAYER_RADIUS,
-        canvasY - PLAYER_RADIUS,
-        PLAYER_RADIUS * 2,
-        PLAYER_RADIUS * 2,
-    );
-    context.restore();
+    this.context.drawImage(
+      img,
+      canvasX - PLAYER_RADIUS,
+      canvasY - PLAYER_RADIUS,
+      PLAYER_RADIUS * 2,
+      PLAYER_RADIUS * 2
+    )
+    this.context.restore()
   }
 
-
-
-function renderBullet(me, bullet) {
-    const { x, y, rot } = bullet;
+  renderBullet(me, bullet) {
+    const { x, y, rot } = bullet
 
     // Rotate around center
-    const mycenterX = canvas.width / 2;
-    const mycenterY = canvas.height * 4 / 5;
-    context.save();
-    context.translate(mycenterX, mycenterY);
-    context.rotate(me.rot - rot);
-    context.translate(-mycenterX, -mycenterY);
-    
-    // Bullet x, y
-    let canvasX = mycenterX + (x - me.x) - BULLET_RADIUS;
-    let canvasY = mycenterY - ((y - me.y) - BULLET_RADIUS);
+    const mycenterX = this.canvas.width / 2
+    const mycenterY = (this.canvas.height * 4) / 5
+
+    // Rotate
+    this.context.save()
+    this.context.translate(mycenterX, mycenterY)
+    this.context.rotate(me.rot - rot)
+    this.context.translate(-mycenterX, -mycenterY)
+
+    // Get Bullet x, y
+    let canvasX = mycenterX + (x - me.x) - BULLET_RADIUS
+    let canvasY = mycenterY - (y - me.y - BULLET_RADIUS)
 
     // Draw the bullet
-    context.drawImage(
-        getAsset('bullet.svg'),
-        canvasX,
-        canvasY,
-        BULLET_RADIUS * 10,
-        BULLET_RADIUS * 10,
-    );
-    context.restore();
-}
-
-
-
-function renderMainMenu() {
-    const t = Date.now() / 7500;
-    const x = MAP_SIZE / 2 + 800 * Math.cos(t);
-    const y = MAP_SIZE / 2 + 800 * Math.sin(t);
-    renderBackground(x, y);
-  
-    // Rerun this render function on the next frame
-    animationFrameRequestId = requestAnimationFrame(renderMainMenu);
-}
-
-animationFrameRequestId = requestAnimationFrame(renderMainMenu);
-
-// Replaces main menu rendering with game rendering.
-export function startRendering(renderData) {
-    cancelAnimationFrame(animationFrameRequestId);
-    animationFrameRequestId = requestAnimationFrame(render(renderData));
-}
-
-// Replaces game rendering with main menu rendering.
-export function stopRendering() {
-    cancelAnimationFrame(animationFrameRequestId);
-    animationFrameRequestId = requestAnimationFrame(renderMainMenu);
+    this.context.drawImage(
+      getAsset('bullet.svg'),
+      canvasX,
+      canvasY,
+      BULLET_RADIUS * 10,
+      BULLET_RADIUS * 10
+    )
+    this.context.restore()
   }
+
+  renderMainMenu() {
+    const t = Date.now() / 7500
+    const x = MAP_SIZE / 2 + 800 * Math.cos(t)
+    const y = MAP_SIZE / 2 + 800 * Math.sin(t)
+    this.renderBackground(x, y)
+
+    // Rerun this render function on the next frame
+    animationFrameRequestId = requestAnimationFrame(this.renderMainMenu)
+  }
+
+  animationFrameRequestId = requestAnimationFrame(this.renderMainMenu)
+
+  // Replaces main menu rendering with game rendering.
+  startRendering(renderData) {
+    cancelAnimationFrame(animationFrameRequestId)
+    animationFrameRequestId = requestAnimationFrame(this.render(renderData))
+  }
+
+  // Replaces game rendering with main menu rendering.
+  stopRendering() {
+    cancelAnimationFrame(animationFrameRequestId)
+    animationFrameRequestId = requestAnimationFrame(this.renderMainMenu)
+  }
+}
