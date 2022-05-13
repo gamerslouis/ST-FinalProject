@@ -40,10 +40,12 @@ function render(renderData){
 
     // Spaces
     renderPlayer(renderData.me, renderData.spaces[0]);
+    // others.forEach(renderPlayer.bind(null, me));
 
     // Bullets
-    //bullets.forEach(renderBullet.bind(null, me));
     renderBullet(renderData.me, renderData.bullets[0]);
+    //bullets.forEach(renderBullet.bind(null, me));
+    
     animationFrameRequestId = requestAnimationFrame(render);
 }
 
@@ -70,7 +72,7 @@ function renderBackground(me) {
 
     context.drawImage(
         background_img,
-        x, (MAP_SIZE - y) - edge * 1/5, //top left corner of img (sx, sy), note that MAP_SIZE = (bgh - canvas.height - y)
+        x, (MAP_SIZE - y) - edge * 1 / 5, //top left corner of img (sx, sy), note that MAP_SIZE = (bgh - canvas.height - y)
         canvas.width, canvas.height, //How big of the grab
         -edge , -edge , // put on the left corner on the window
         bgw, bgh + edge //size of what was grabed
