@@ -143,6 +143,7 @@ describe('Game', () => {
       expect(game.airplanes[playerID].getMoveDirection()).toBeCloseTo(
         computeDir
       )
+      expect(game.airplanes[playerID].getRotation()).toBeCloseTo(computeDir)
     })
 
     it('Right arrow key update the airplane to trun right', () => {
@@ -163,6 +164,7 @@ describe('Game', () => {
       expect(game.airplanes[playerID].getMoveDirection()).toBeCloseTo(
         computeDir
       )
+      expect(game.airplanes[playerID].getRotation()).toBeCloseTo(computeDir)
     })
   })
 })

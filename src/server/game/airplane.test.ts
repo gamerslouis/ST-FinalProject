@@ -10,7 +10,7 @@ describe('Airplane', () => {
       expect(airplane.getPosition().x).not.toBeNaN()
       expect(airplane.getPosition().y).not.toBeNaN()
       expect(airplane.getSpeed()).toEqual(Constants.PLAYER_SPEED)
-      expect(airplane.getRotation()).not.toBeNaN()
+      expect(airplane.getRotation()).toBeCloseTo(airplane.getMoveDirection())
       expect(airplane.getHealth()).toEqual(Constants.PLAYER_MAX_HP)
       expect(airplane.getMoveDirection()).not.toBeNaN()
     })
@@ -21,12 +21,6 @@ describe('Airplane', () => {
       expect(airplane.getPosition().x).toBeLessThanOrEqual(Constants.MAP_SIZE)
       expect(airplane.getPosition().y).toBeGreaterThanOrEqual(0)
       expect(airplane.getPosition().y).toBeLessThanOrEqual(Constants.MAP_SIZE)
-    })
-
-    it('The rotation should between -1 and 1', () => {
-      let airplane = new Airplane('123')
-      expect(airplane.getRotation()).toBeGreaterThanOrEqual(-1)
-      expect(airplane.getRotation()).toBeLessThanOrEqual(1)
     })
   })
 

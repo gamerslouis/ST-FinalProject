@@ -1,5 +1,3 @@
-import Bullet from '../server/game/bullet'
-
 type Loc = {
   x: number
   y: number
@@ -7,7 +5,12 @@ type Loc = {
 }
 
 type Airplane = Loc & {
+  id: string
   health: number
+}
+
+type Bullet = Loc & {
+  id: string
 }
 
 type GameUpdateMessage = {
@@ -15,4 +18,14 @@ type GameUpdateMessage = {
   self: Airplane
   airplanes: Array<Airplane>
   bullets: Array<Bullet>
+}
+
+{
+  airplanes: [
+    {
+      x: 10,
+      y: 50,
+      rot: 1,
+    },
+  ]
 }

@@ -6,6 +6,7 @@ class Bullet implements IGameObject {
   parentId: string
   position: Position = { x: 0, y: 0 }
   direction: number
+  rotation: number
   speed: number
 
   constructor(parentId: string, pos: Position, dir: number, speed: number) {
@@ -14,6 +15,7 @@ class Bullet implements IGameObject {
     this.position.x = pos.x
     this.position.y = pos.y
     this.direction = dir
+    this.rotation = this.direction
     this.speed = speed
   }
 
@@ -37,10 +39,10 @@ class Bullet implements IGameObject {
     this.position.y = newPosition.y
   }
   getRotation(): number {
-    throw new Error('Method not implemented.')
+    return this.rotation
   }
   setRotation(newRotation: number) {
-    throw new Error('Method not implemented.')
+    this.rotation += newRotation
   }
   getSpeed(): number {
     return this.speed
@@ -53,6 +55,14 @@ class Bullet implements IGameObject {
   }
   setMoveDirection(number: any) {
     throw new Error('Method not implemented.')
+  }
+  serialize(): any {
+    return {
+      id: this.id,
+      x: this.position.x,
+      y: this.position.y,
+      rot: this.rotation,
+    }
   }
 }
 

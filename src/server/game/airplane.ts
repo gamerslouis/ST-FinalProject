@@ -16,7 +16,7 @@ class Airplane implements IAirplane {
     this.position.y = Constants.PLAYER_ORIGIN_POS_Y
     this.direction = Math.random() * 2 * Math.PI
     this.speed = Constants.PLAYER_SPEED
-    this.rotation = 0.5
+    this.rotation = this.direction
     this.health = Constants.PLAYER_MAX_HP
   }
   getHealth(): number {
@@ -50,7 +50,7 @@ class Airplane implements IAirplane {
     return this.rotation
   }
   setRotation(newRotation: number) {
-    throw new Error('Method not implemented.')
+    this.rotation += newRotation
   }
   getSpeed(): number {
     return this.speed
@@ -69,6 +69,16 @@ class Airplane implements IAirplane {
     const dx = this.position.x - targetPosition.x
     const dy = this.position.y - targetPosition.y
     return Math.sqrt(dx * dx + dy * dy)
+  }
+
+  serialize(): any {
+    return {
+      id: this.id,
+      x: this.position.x,
+      y: this.position.y,
+      rot: this.rotation,
+      health: this.health,
+    }
   }
 }
 

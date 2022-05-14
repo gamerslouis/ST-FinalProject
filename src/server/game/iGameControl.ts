@@ -15,4 +15,5 @@ export interface IGameControl {
   addPlayer(newPlayer: IPlayer)
   removePlayer(playerId: string)
   handleInput(playerId: string, event: PlayerInputEvent)
+  handleDisconnect(playerId: string)
 }

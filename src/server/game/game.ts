@@ -59,8 +59,8 @@ class Game implements IGameControl {
       this.players[playerID].update(PlayerUpdateEventType.gameUpdate, {
         t: Date.now(),
         self: this.airplanes[playerID],
-        airplanes: nearbyAirplanes,
-        bullets: nearbyBullets,
+        airplanes: nearbyAirplanes.map((a: any) => a.serialize()),
+        bullets: nearbyBullets.map((b: any) => b.serialize()),
       })
     })
   }
@@ -94,16 +94,21 @@ class Game implements IGameControl {
       case Constants.INPUT_EVENTS.LEFT_ARROW_KEY:
         if (event.state == PlayerInputState.Press) {
           this.airplanes[playerId].setMoveDirection(Constants.MOVE_DELTA_RAD)
+          this.airplanes[playerId].setRotation(Constants.MOVE_DELTA_RAD)
         }
         break
       case Constants.INPUT_EVENTS.RIGHT_ARROW_KEY:
         if (event.state == PlayerInputState.Press) {
           this.airplanes[playerId].setMoveDirection(-Constants.MOVE_DELTA_RAD)
+          this.airplanes[playerId].setRotation(-Constants.MOVE_DELTA_RAD)
         }
         break
       default:
         break
     }
+  }
+  handleDisconnect(playerId: string) {
+    throw new Error('Method not implemented.')
   }
 }
 

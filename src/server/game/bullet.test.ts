@@ -14,6 +14,7 @@ describe('bullet', () => {
     expect(bullet.getPosition().y).toEqual(60)
     expect(bullet.getMoveDirection()).toEqual(direction)
     expect(bullet.getSpeed()).toEqual(speed)
+    expect(bullet.getRotation()).toBeCloseTo(bullet.getMoveDirection())
   })
 
   it('Set new position', () => {
