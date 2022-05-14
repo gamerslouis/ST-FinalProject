@@ -42,6 +42,7 @@ export default class Render {
   }
 
   frameReinder() {
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.render(this.stateProvider())
     this.animationFrameRequestId = requestAnimationFrame(this.frameReinder)
   }
@@ -87,20 +88,20 @@ export default class Render {
     this.context.translate(-mycenterX, -mycenterY)
 
     // Size of background image
-    const bgw = MAP_SIZE + this.canvas.width * 2
-    const bgh = MAP_SIZE + this.canvas.height * 2
-    const edge = (MAP_SIZE * 1) / 2
+    const bgw = (MAP_SIZE + this.canvas.width) * 2
+    const bgh = (MAP_SIZE + this.canvas.height) * 2
+    const edge = (MAP_SIZE / 2)
 
     this.context.drawImage(
       backgroundImg,
       x,
-      MAP_SIZE - y - (edge * 1) / 5, // top left corner of img (sx, sy), note that MAP_SIZE = (bgh - canvas.height - y)
-      this.canvas.width,
-      this.canvas.height, // How big of the grab
-      -edge,
-      -edge, // put on the left corner on the window
+      MAP_SIZE - y, // top left corner of img (sx, sy), note that MAP_SIZE = (bgh - canvas.height - y)
+      edge,
+      edge, // How big of the grab
+      -this.canvas.width / 2,
+      -this.canvas.height / 2, // put on the left corner on the window
       bgw,
-      bgh + edge // size of what was grabed
+      bgh + edge// size of what was grabed
     )
     this.context.restore()
     return [x, MAP_SIZE - y]
@@ -172,7 +173,7 @@ export default class Render {
     // Get Bullet x, y
     const canvasX = mycenterX + (x - self.x) - BULLET_RADIUS
     const canvasY = mycenterY - (y - self.y - BULLET_RADIUS)
-
+    
     // Rotate
     this.context.translate(canvasX, canvasY)
     this.context.rotate(-rot)

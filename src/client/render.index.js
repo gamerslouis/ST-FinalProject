@@ -11,7 +11,7 @@ const render = new Render(document.getElementById('canvas'), window, () => ({
     rot: 0,
     health: 90,
   },
-  spaces: [
+  airplanes: [
     {
       x: 200,
       y: 600,
