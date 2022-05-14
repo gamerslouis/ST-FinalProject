@@ -61,6 +61,17 @@ describe('Airplane', () => {
       expect(airplane.getPosition().y).toBeCloseTo(expectY)
     })
 
+    it('Serialize data checking', () => {
+      let airplane = new Airplane('123')
+      expect(airplane.serialize()).toEqual({
+        id: airplane.getId(),
+        x: 50,
+        y: 50,
+        rot: airplane.rotation,
+        health: Constants.PLAYER_MAX_HP,
+      })
+    })
+
     describe('Direction', () => {
       it('Trun left when trunLeft flag is on', () => {
         let airplane = new Airplane('123')
