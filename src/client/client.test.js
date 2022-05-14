@@ -1,10 +1,12 @@
 import Client from './client'
 
+jest.mock('./render')
+
 describe('client', () => {
   let client
 
   beforeEach(() => {
-    client = new Client('123')
+    client = new Client('123', {})
   })
 
   it('construct client', () => {

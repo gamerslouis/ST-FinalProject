@@ -1,63 +1,62 @@
-import NetworkManager from './network'
+import { EventEmitter } from 'events'
+import connect from './network'
 import InputManager from './input'
 import Render from './render'
-import State from './state'
+import State from './dummyState'
 
-//import { startRendering, stopRendering } from './render';
-//import { downloadAssets } from './assets';
-//import './css/main.css';
+import constants from '../shared/constants'
 
-// Get the canvas graphics context
-const playMenu = document.getElementById('dialog')
-const canvas = document.getElementById('canvas')
-const context = canvas.getContext('2d')
-
-const renderData = {
-  me: {
-    x: 0,
-    y: 400,
-    rot: 0,
-    health: 90,
-  },
-  spaces: [
-    {
-      x: 200,
-      y: 600,
-      rot: 0.5,
-      health: 45,
-    },
-  ],
-  bullets: [
-    {
-      x: 0,
-      y: 800,
-      rot: 3.14,
-    },
-  ],
-}
-
-export default class Client {
-  constructor(username) {
+class Client extends EventEmitter {
+  constructor(username, canvas) {
+    super()
     this.username = username
-    this.network = new NetworkManager()
+    this.canvas = canvas
+    this.network = undefined
+    this.input = undefined
+    this.running = false
+  }
+
+  async start() {
+    this.network = await connect()
+    this.network.getSocket().emit(constants.MSG_TYPES.JOIN_GAME, this.username)
+
     this.input = new InputManager(this.network.getSocket())
-  }
+    this.state = new State()
+    this.render = new Render(
+      this.canvas,
+      window,
+      this.state.getCurrentState.bind(this.state)
+    )
 
-  start() {
-    Promise.all([
-      this.network.connect(),
-      //downloadAssets(),
-    ]).then(() => {
-      let state = new State()
-      this.input.attach()
+    this.input.attach()
+    this.render.startFrameRendering()
 
-      let myRender = new Render(canvas, context, window)
-      myRender.render(renderData)
+    this.network.getSocket().on(constants.MSG_TYPES.GAME_UPDATE, (data) => {
+      this.state.update(data)
     })
+    this.network.getSocket().on(constants.MSG_TYPES.GAME_OVER, () => {
+      this.clear()
+    })
+    this.network.getSocket().on('disconnect', () => {
+      this.clear()
+    })
+    this.running = true
   }
 
-  gameOver() {
-    this.input.dettach()
-    playMenu.classList.remove('invisible')
+  clear() {
+    if (this.running) {
+      this.running = false
+      this.input.dettach()
+      this.render.stopFrameRendering()
+      this.emit('gameEnd')
+    }
   }
 }
+
+const startClient = async (username, canvas) => {
+  const client = new Client(username, canvas)
+  await client.start()
+  return client
+}
+
+export default startClient

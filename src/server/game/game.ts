@@ -1,4 +1,3 @@
-import { Socket } from 'socket.io'
 import Constants from '../../shared/constants'
 import { IPlayer, PlayerUpdateEventType } from '../iPlayer'
 import Airplane from './airplane'
@@ -76,7 +75,7 @@ class Game implements IGameControl {
       )
       this.players[playerID].update(PlayerUpdateEventType.gameUpdate, {
         t: Date.now(),
-        self: this.airplanes[playerID],
+        self: this.airplanes[playerID].serialize(),
         airplanes: nearbyAirplanes.map((a: any) => a.serialize()),
         bullets: nearbyBullets.map((b: any) => b.serialize()),
       })

@@ -31,7 +31,7 @@ export default class Render {
     if (this.animationFrameRequestId !== null) {
       cancelAnimationFrame(this.animationFrameRequestId)
     }
-    this.frameReinder()
+    this.animationFrameRequestId = requestAnimationFrame(this.frameReinder)
   }
 
   stopFrameRendering() {
@@ -53,26 +53,28 @@ export default class Render {
   }
 
   render(renderData) {
+    if (renderData === undefined) return
+
     this.context.save()
     // Note : Player itself is located at (canvas.width * 1/2, canvas.height * 1/5)
 
-    const { me, spaces, bullets } = renderData
+    const { self, airplanes, bullets } = renderData
 
-    this.renderBackground(me)
+    this.renderBackground(self)
 
     // Player
-    this.renderPlayer(me, me, 0)
+    this.renderPlayer(self, self, 0)
 
-    // Spaces
-    spaces.forEach((space) => this.renderPlayer(me, space))
+    // airplanes
+    airplanes.forEach((airplane) => this.renderPlayer(self, airplane))
 
     // Bullets
-    bullets.forEach(this.renderBullet.bind(null, me))
+    bullets.forEach(this.renderBullet.bind(null, self))
     this.context.restore()
   }
 
-  renderBackground(me) {
-    const { x, y, rot } = me
+  renderBackground(self) {
+    const { x, y, rot } = self
 
     const mycenterX = this.canvas.width / 2
     const mycenterY = (this.canvas.height * 4) / 5
@@ -104,7 +106,7 @@ export default class Render {
     return [x, MAP_SIZE - y]
   }
 
-  renderPlayer(me, player, character = 1) {
+  renderPlayer(self, player, character = 1) {
     const { x, y, health, rot } = player
 
     // Rotate around center
@@ -112,15 +114,15 @@ export default class Render {
     const mycenterY = (this.canvas.height * 4) / 5
 
     // Player x, y
-    const canvasX = mycenterX + (x - me.x)
-    const canvasY = mycenterY - (y - me.y)
+    const canvasX = mycenterX + (x - self.x)
+    const canvasY = mycenterY - (y - self.y)
 
     this.context.save()
 
-    // me.rotation is background's job
+    // self.rotation is background's job
     if (character !== 0) {
       this.context.translate(mycenterX, mycenterY)
-      this.context.rotate(me.rot)
+      this.context.rotate(self.rot)
       this.context.translate(-mycenterX, -mycenterY)
 
       // rotate itself
@@ -160,7 +162,7 @@ export default class Render {
     this.context.restore()
   }
 
-  renderBullet(me, bullet) {
+  renderBullet(self, bullet) {
     const { x, y, rot } = bullet
 
     // Rotate around center
@@ -168,8 +170,8 @@ export default class Render {
     const mycenterY = (this.canvas.height * 4) / 5
 
     // Get Bullet x, y
-    const canvasX = mycenterX + (x - me.x) - BULLET_RADIUS
-    const canvasY = mycenterY - (y - me.y - BULLET_RADIUS)
+    const canvasX = mycenterX + (x - self.x) - BULLET_RADIUS
+    const canvasY = mycenterY - (y - self.y - BULLET_RADIUS)
 
     // Rotate
     this.context.translate(canvasX, canvasY)

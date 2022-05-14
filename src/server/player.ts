@@ -1,17 +1,32 @@
 import { randomUUID } from 'crypto'
 import { Socket } from 'socket.io'
+import { IGameControl } from './game/iGameControl'
 import { IPlayer, PlayerUpdateEventType } from './iPlayer'
-const constatns = require('../shared/constants')
+const Constants = require('../shared/constants')
 
 export default class Player implements IPlayer {
   socket: Socket
   username: string
   id: string
+  gameControl: IGameControl
 
-  constructor(username, socket) {
-    this.username = username
+  constructor(socket, gameControl: IGameControl) {
     this.socket = socket
     this.id = randomUUID()
+    this.gameControl = gameControl
+
+    socket.on(Constants.MSG_TYPES.JOIN_GAME, (username) => {
+      this.username = username
+      gameControl.addPlayer(this)
+
+      socket.on('disconnect', () => {
+        gameControl.handleDisconnect(this.id)
+      })
+      
+      socket.on(Constants.MSG_TYPES.INPUT, (evt) => {
+        gameControl.handleInput(this.id, evt)
+      })
+    })
   }
 
   getName(): string {
@@ -25,10 +40,10 @@ export default class Player implements IPlayer {
   update(eventType: PlayerUpdateEventType, eventData: any) {
     switch (eventType) {
       case PlayerUpdateEventType.gameUpdate:
-        this.socket.emit(constatns.MSG_TYPES.GAME_UPDATE, eventData)
+        this.socket.emit(Constants.MSG_TYPES.GAME_UPDATE, eventData)
         break
       case PlayerUpdateEventType.playerDead:
-        this.socket.emit(constatns.MSG_TYPES.GAME_OVER, null)
+        this.socket.emit(Constants.MSG_TYPES.GAME_OVER, null)
       default:
         break
     }
