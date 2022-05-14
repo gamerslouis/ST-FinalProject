@@ -1,6 +1,6 @@
 // Don't know why the relative path "/assets/xxx.svg"
 // is unsolvable, so here we use url instead.
-const img_dic = {
+const IMG_DIC = {
   'ship.svg': 'https://www.svgrepo.com/show/285107/ufo-alien.svg',
   'bullet.svg': 'https://www.svgrepo.com/show/178753/bullet-weapons.svg',
   'airplane.svg': 'https://www.svgrepo.com/show/80401/airplane.svg',
@@ -19,8 +19,6 @@ const ASSET_NAMES = [
 
 const assets = {}
 
-const downloadPromise = Promise.all(ASSET_NAMES.map(downloadAsset))
-
 function downloadAsset(assetName) {
   return new Promise((resolve) => {
     const asset = new Image()
@@ -29,10 +27,10 @@ function downloadAsset(assetName) {
       assets[assetName] = asset
       resolve()
     }
-    asset.src = img_dic[assetName]
+    asset.src = IMG_DIC[assetName]
   })
 }
 
-export const downloadAssets = () => downloadPromise
+export const downloadAssets = () => Promise.all(ASSET_NAMES.map(downloadAsset))
 
 export const getAsset = (assetName) => assets[assetName]

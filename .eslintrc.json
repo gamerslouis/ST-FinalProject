@@ -24,7 +24,8 @@
     ],
     "object-curly-newline": "off",
     "operator-linebreak": ["error", "after"],
-    "import/no-extraneous-dependencies": ["off"]
+    "import/no-extraneous-dependencies": ["off"],
+    "operator-linebreak": "off"
   },
   "parserOptions": {
     "requireConfigFile": false

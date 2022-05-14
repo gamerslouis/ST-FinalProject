@@ -1,10 +1,13 @@
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
 
 module.exports = {
   entry: {
-    game: './src/client/index.js',
+    game: process.env.RENDER_TEST
+      ? './src/client/render.index.js'
+      : './src/client/index.js',
   },
   output: {
     filename: '[name].[contenthash].js',

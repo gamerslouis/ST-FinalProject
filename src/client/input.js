@@ -1,5 +1,7 @@
 const Constants = require('../shared/constants')
 
+console.log(process.env)
+
 export default class InputManager {
   constructor(socket) {
     this.socket = socket
