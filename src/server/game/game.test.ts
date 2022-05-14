@@ -10,7 +10,7 @@ jest.mock('../player')
 jest.useFakeTimers()
 
 describe('Game', () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.resetAllMocks()
   })
 
@@ -38,8 +38,8 @@ describe('Game', () => {
 
   it('Each bullet need to update', () => {
     const game = new Game()
-    const bullet1 = new Bullet('123', {x: 50, y: 50}, 1, 200)
-    const bullet2 = new Bullet('123', {x: 50, y: 40}, 1, 200)
+    const bullet1 = new Bullet('123', { x: 50, y: 50 }, 1, 200)
+    const bullet2 = new Bullet('123', { x: 50, y: 40 }, 1, 200)
     jest.spyOn(bullet1, 'update')
     jest.spyOn(bullet2, 'update')
     game.bullets.push(bullet1)
@@ -133,6 +133,15 @@ describe('Game', () => {
 
     jest.runOnlyPendingTimers()
     expect(game.bullets).toHaveLength(0)
+  })
+
+  it('Remove the players if they are disconnect to the game', () => {
+    const game = new Game()
+    jest
+      .spyOn(game, 'removePlayer')
+      .mockImplementation((playerId: string) => {})
+    game.handleDisconnect('123')
+    expect(game.removePlayer).toBeCalledWith('123')
   })
 
   describe('Player Input Handling', () => {

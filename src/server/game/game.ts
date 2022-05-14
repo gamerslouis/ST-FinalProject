@@ -120,7 +120,8 @@ class Game implements IGameControl {
     }
   }
   handleDisconnect(playerId: string) {
-    throw new Error('Method not implemented.')
+    // Remove the player from game
+    this.removePlayer(playerId)
   }
 }
 
