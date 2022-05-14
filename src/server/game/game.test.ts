@@ -22,6 +22,33 @@ describe('Game', () => {
     expect(game.lastUpdateTime).not.toEqual(initCreatedTime)
   })
 
+  it('Each airplane need to update', () => {
+    const game = new Game()
+    const airplane1 = new Airplane('123')
+    const airplane2 = new Airplane('456')
+    game.airplanes['123'] = airplane1
+    game.airplanes['456'] = airplane2
+
+    jest.spyOn(airplane1, 'update')
+    jest.spyOn(airplane2, 'update')
+    game.update()
+    expect(airplane1.update).toBeCalledTimes(1)
+    expect(airplane2.update).toBeCalledTimes(1)
+  })
+
+  it('Each bullet need to update', () => {
+    const game = new Game()
+    const bullet1 = new Bullet('123', {x: 50, y: 50}, 1, 200)
+    const bullet2 = new Bullet('123', {x: 50, y: 40}, 1, 200)
+    jest.spyOn(bullet1, 'update')
+    jest.spyOn(bullet2, 'update')
+    game.bullets.push(bullet1)
+    game.bullets.push(bullet2)
+    game.update()
+    expect(bullet1.update).toBeCalledTimes(1)
+    expect(bullet2.update).toBeCalledTimes(1)
+  })
+
   it('Send update to each player', () => {
     const game = new Game()
     const playerId1 = '123'
