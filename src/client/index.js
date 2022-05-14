@@ -1,4 +1,19 @@
 import Client from './client'
+import { downloadAssets } from './assets'
+import './css/main.css'
+
+// Get the dialog and btn
+const playMenu = document.getElementById('dialog')
+const playButton = document.getElementById('enter-game-btn')
+const usernameInput = document.getElementById('username-input')
+
+Promise.all([downloadAssets(), usernameInput.focus()])
+  .then(() => {
+    playButton.onclick = () => {
+      playMenu.classList.add('invisible')
+    }
+  })
+  .catch(console.error)
 
 export default function initScript() {
   document.getElementById('enter-game-btn').addEventListener('click', () => {
