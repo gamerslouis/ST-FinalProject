@@ -1,5 +1,6 @@
 import { IGameObject, Position } from './iGameObject'
 import { randomUUID } from 'crypto'
+import Constants from '../../shared/constants'
 
 class Bullet implements IGameObject {
   id: string
@@ -19,9 +20,16 @@ class Bullet implements IGameObject {
     this.speed = speed
   }
 
-  update(dt: number) {
+  update(dt: number): boolean {
     this.position.x += dt * this.speed * Math.sin(this.direction)
     this.position.y -= dt * this.speed * Math.cos(this.direction)
+
+    return (
+      this.position.x < 0 ||
+      this.position.x > Constants.MAP_SIZE ||
+      this.position.y < 0 ||
+      this.position.y > Constants.MAP_SIZE
+    )
   }
   getId(): string {
     return this.id

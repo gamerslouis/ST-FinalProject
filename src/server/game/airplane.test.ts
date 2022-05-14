@@ -1,4 +1,5 @@
 import Airplane from './airplane'
+import { PlayerInputState } from './iGameControl'
 import { Position } from './iGameObject'
 const Constants = require('../../shared/constants')
 
@@ -58,6 +59,68 @@ describe('Airplane', () => {
       const expectY = Math.max(0, Math.min(Constants.MAP_SIZE, computeY))
       expect(airplane.getPosition().x).toBeCloseTo(expectX)
       expect(airplane.getPosition().y).toBeCloseTo(expectY)
+    })
+
+    describe('Direction', () => {
+      it('Trun left when trunLeft flag is on', () => {
+        let airplane = new Airplane('123')
+        let dt = 1
+        const preDirection = airplane.getMoveDirection()
+
+        // Set trunLeft flag on
+        airplane.control.turnLeft = PlayerInputState.Press
+
+        airplane.update(dt)
+
+        expect(airplane.getMoveDirection()).toBeCloseTo(
+          preDirection + Constants.MOVE_DELTA_RAD
+        )
+        expect(airplane.getRotation()).toBeCloseTo(
+          preDirection + Constants.MOVE_DELTA_RAD
+        )
+      })
+
+      it('Go straight when trunLeft and turnRight flag are both off or both on', () => {
+        let airplane = new Airplane('123')
+        let dt = 1
+        const preDirection = airplane.getMoveDirection()
+
+        // Set both trunLeft flag and trunRight flag on
+        airplane.control.turnLeft = PlayerInputState.Press
+        airplane.control.turnRight = PlayerInputState.Press
+
+        airplane.update(dt)
+
+        expect(airplane.getMoveDirection()).toBeCloseTo(preDirection)
+        expect(airplane.getRotation()).toBeCloseTo(preDirection)
+
+        // Set both trunLeft flag and trunRight flag off
+        airplane.control.turnLeft = PlayerInputState.Release
+        airplane.control.turnRight = PlayerInputState.Release
+
+        airplane.update(dt)
+
+        expect(airplane.getMoveDirection()).toBeCloseTo(preDirection)
+        expect(airplane.getRotation()).toBeCloseTo(preDirection)
+      })
+
+      it('Trun left when trunRight flag is on', () => {
+        let airplane = new Airplane('123')
+        let dt = 1
+        const preDirection = airplane.getMoveDirection()
+
+        // Set trunLeft flag on
+        airplane.control.turnRight = PlayerInputState.Press
+
+        airplane.update(dt)
+
+        expect(airplane.getMoveDirection()).toBeCloseTo(
+          preDirection - Constants.MOVE_DELTA_RAD
+        )
+        expect(airplane.getRotation()).toBeCloseTo(
+          preDirection - Constants.MOVE_DELTA_RAD
+        )
+      })
     })
   })
 })

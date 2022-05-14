@@ -22,6 +22,7 @@ class Game implements IGameControl {
 
   update() {
     const currectTime = Date.now()
+    const dt = (currectTime - this.lastUpdateTime) / 1000
     this.lastUpdateTime = currectTime
 
     // Check collision
@@ -39,6 +40,23 @@ class Game implements IGameControl {
       if (airplane.getHealth() <= 0) {
         this.removePlayer(playerID)
       }
+    })
+
+    // Update each bullet
+    const bulletsToRemove = []
+    this.bullets.forEach((bullet) => {
+      if (bullet.update(dt)) {
+        // Destroy this bullet
+        bulletsToRemove.push(bullet)
+      }
+    })
+    this.bullets = this.bullets.filter(
+      (bullet) => !bulletsToRemove.includes(bullet)
+    )
+
+    // Update each airplanes position
+    Object.keys(this.airplanes).forEach((airplaneID) => {
+      this.airplanes[airplaneID].update()
     })
 
     // Send update to each player
@@ -92,16 +110,10 @@ class Game implements IGameControl {
           )
         break
       case Constants.INPUT_EVENTS.LEFT_ARROW_KEY:
-        if (event.state == PlayerInputState.Press) {
-          this.airplanes[playerId].setMoveDirection(Constants.MOVE_DELTA_RAD)
-          this.airplanes[playerId].setRotation(Constants.MOVE_DELTA_RAD)
-        }
+        this.airplanes[playerId].control.turnLeft = event.state
         break
       case Constants.INPUT_EVENTS.RIGHT_ARROW_KEY:
-        if (event.state == PlayerInputState.Press) {
-          this.airplanes[playerId].setMoveDirection(-Constants.MOVE_DELTA_RAD)
-          this.airplanes[playerId].setRotation(-Constants.MOVE_DELTA_RAD)
-        }
+        this.airplanes[playerId].control.turnRight = event.state
         break
       default:
         break

@@ -125,46 +125,52 @@ describe('Game', () => {
       expect(game.bullets[0].parentId).toBe(playerID)
     })
 
-    it('Left arrow key update the airplane to trun left', () => {
+    it('Left arrow key press/release event set the left key status', () => {
       const game = new Game()
       const playerID = '123'
       const airplane = new Airplane(playerID)
       game.airplanes[playerID] = airplane
 
-      jest.runOnlyPendingTimers()
-
       /* Press left arrow key */
-      let preDirection = game.airplanes[playerID].getMoveDirection()
       game.handleInput(playerID, {
         key: Constants.INPUT_EVENTS.LEFT_ARROW_KEY,
         state: PlayerInputState.Press,
       })
-      let computeDir = preDirection + MOVE_DELTA_RAD
-      expect(game.airplanes[playerID].getMoveDirection()).toBeCloseTo(
-        computeDir
+      /* Release left arrow key */
+      expect(game.airplanes[playerID].control.turnLeft).toBe(
+        PlayerInputState.Press
       )
-      expect(game.airplanes[playerID].getRotation()).toBeCloseTo(computeDir)
+      game.handleInput(playerID, {
+        key: Constants.INPUT_EVENTS.LEFT_ARROW_KEY,
+        state: PlayerInputState.Release,
+      })
+      expect(game.airplanes[playerID].control.turnLeft).toBe(
+        PlayerInputState.Release
+      )
     })
 
-    it('Right arrow key update the airplane to trun right', () => {
+    it('Right arrow key press/release event set the right key status', () => {
       const game = new Game()
       const playerID = '123'
       const airplane = new Airplane(playerID)
       game.airplanes[playerID] = airplane
 
-      jest.runOnlyPendingTimers()
-
       /* Press right arrow key */
-      let preDirection = game.airplanes[playerID].getMoveDirection()
       game.handleInput(playerID, {
         key: Constants.INPUT_EVENTS.RIGHT_ARROW_KEY,
         state: PlayerInputState.Press,
       })
-      let computeDir = preDirection - MOVE_DELTA_RAD
-      expect(game.airplanes[playerID].getMoveDirection()).toBeCloseTo(
-        computeDir
+      expect(game.airplanes[playerID].control.turnRight).toBe(
+        PlayerInputState.Press
       )
-      expect(game.airplanes[playerID].getRotation()).toBeCloseTo(computeDir)
+      /* Release left arrow key */
+      game.handleInput(playerID, {
+        key: Constants.INPUT_EVENTS.RIGHT_ARROW_KEY,
+        state: PlayerInputState.Release,
+      })
+      expect(game.airplanes[playerID].control.turnRight).toBe(
+        PlayerInputState.Release
+      )
     })
   })
 })

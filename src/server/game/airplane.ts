@@ -1,5 +1,6 @@
 import { Position } from './iGameObject'
 import { IAirplane } from './iAirplane'
+import { PlayerInputState } from './iGameControl'
 const Constants = require('../../shared/constants')
 
 class Airplane implements IAirplane {
@@ -9,6 +10,10 @@ class Airplane implements IAirplane {
   speed: number
   rotation: number
   health: number
+  control = {
+    turnLeft: PlayerInputState.Release,
+    turnRight: PlayerInputState.Release,
+  }
 
   constructor(playerId: string) {
     this.id = playerId
@@ -36,6 +41,16 @@ class Airplane implements IAirplane {
     // Masure the aireplane stay in the map
     this.position.x = Math.max(0, Math.min(Constants.MAP_SIZE, this.position.x))
     this.position.y = Math.max(0, Math.min(Constants.MAP_SIZE, this.position.y))
+
+    // Set direction
+    if (this.control.turnLeft == PlayerInputState.Press) {
+      this.setMoveDirection(Constants.MOVE_DELTA_RAD)
+      this.setRotation(Constants.MOVE_DELTA_RAD)
+    }
+    if (this.control.turnRight == PlayerInputState.Press) {
+      this.setMoveDirection(-Constants.MOVE_DELTA_RAD)
+      this.setRotation(-Constants.MOVE_DELTA_RAD)
+    }
   }
   getId(): string {
     return this.id
