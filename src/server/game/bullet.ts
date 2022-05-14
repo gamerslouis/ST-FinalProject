@@ -64,6 +64,11 @@ class Bullet implements IGameObject {
   setMoveDirection(number: any) {
     throw new Error('Method not implemented.')
   }
+  distanceTo(targetPosition: Position): number {
+    const dx = this.position.x - targetPosition.x
+    const dy = this.position.y - targetPosition.y
+    return Math.sqrt(dx * dx + dy * dy)
+  }
   serialize(): any {
     return {
       id: this.id,
