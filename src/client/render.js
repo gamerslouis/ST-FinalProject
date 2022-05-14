@@ -2,13 +2,16 @@ import { debounce } from 'throttle-debounce'
 import { getAsset } from './assets'
 
 const Constants = require('../shared/constants')
+
 const { PLAYER_RADIUS, PLAYER_MAX_HP, BULLET_RADIUS, MAP_SIZE } = Constants
 
 export default class Render {
-  constructor(canvas, context, window) {
+  constructor(canvas, window, stateProvider) {
     this.window = window
     this.canvas = canvas
-    this.context = context
+    this.context = canvas.getContext('2d')
+    this.stateProvider = stateProvider
+    this.animationFrameRequestId = null
 
     this.setCanvasDimensions()
     this.window.addEventListener(
@@ -21,6 +24,26 @@ export default class Render {
     this.renderBackground = this.renderBackground.bind(this)
     this.renderPlayer = this.renderPlayer.bind(this)
     this.renderBullet = this.renderBullet.bind(this)
+    this.frameReinder = this.frameReinder.bind(this)
+  }
+
+  startFrameRendering() {
+    if (this.animationFrameRequestId !== null) {
+      cancelAnimationFrame(this.animationFrameRequestId)
+    }
+    this.frameReinder()
+  }
+
+  stopFrameRendering() {
+    if (this.animationFrameRequestId !== null) {
+      cancelAnimationFrame(this.animationFrameRequestId)
+    }
+    this.animationFrameRequestId = null
+  }
+
+  frameReinder() {
+    this.render(this.stateProvider())
+    this.animationFrameRequestId = requestAnimationFrame(this.frameReinder)
   }
 
   setCanvasDimensions = () => {
@@ -47,16 +70,16 @@ export default class Render {
   }
 
   renderBackground(me) {
-    const { x, y, health, rot } = me
+    const { x, y, rot } = me
 
     const mycenterX = this.canvas.width / 2
     const mycenterY = (this.canvas.height * 4) / 5
-    const background_img = getAsset('background.jpg')
+    const backgroundImg = getAsset('background.jpg')
 
     // rotation
     this.context.save()
     this.context.translate(mycenterX, mycenterY)
-    this.context.rotate(me.rot)
+    this.context.rotate(rot)
     this.context.translate(-mycenterX, -mycenterY)
 
     // Size of background image
@@ -65,15 +88,15 @@ export default class Render {
     const edge = (MAP_SIZE * 1) / 2
 
     this.context.drawImage(
-      background_img,
+      backgroundImg,
       x,
-      MAP_SIZE - y - (edge * 1) / 5, //top left corner of img (sx, sy), note that MAP_SIZE = (bgh - canvas.height - y)
+      MAP_SIZE - y - (edge * 1) / 5, // top left corner of img (sx, sy), note that MAP_SIZE = (bgh - canvas.height - y)
       this.canvas.width,
-      this.canvas.height, //How big of the grab
+      this.canvas.height, // How big of the grab
       -edge,
       -edge, // put on the left corner on the window
       bgw,
-      bgh + edge //size of what was grabed
+      bgh + edge // size of what was grabed
     )
     this.context.restore()
     return [x, MAP_SIZE - y]
@@ -93,7 +116,7 @@ export default class Render {
     this.context.save()
 
     // me.rotation is background's job
-    if (character != 0) {
+    if (character !== 0) {
       this.context.translate(mycenterX, mycenterY)
       this.context.rotate(me.rot)
       this.context.translate(-mycenterX, -mycenterY)
@@ -122,7 +145,7 @@ export default class Render {
 
     // Draw the ship / airplane, or maybe other (e.g., charcter 2 is alien.svg)
     let img = getAsset('airplane.svg')
-    if (character != 0) {
+    if (character !== 0) {
       img = getAsset('ship.svg')
     }
     this.context.drawImage(
@@ -143,8 +166,8 @@ export default class Render {
     const mycenterY = (this.canvas.height * 4) / 5
 
     // Get Bullet x, y
-    let canvasX = mycenterX + (x - me.x) - BULLET_RADIUS
-    let canvasY = mycenterY - (y - me.y - BULLET_RADIUS)
+    const canvasX = mycenterX + (x - me.x) - BULLET_RADIUS
+    const canvasY = mycenterY - (y - me.y - BULLET_RADIUS)
 
     // Rotate
     this.context.translate(canvasX, canvasY)
