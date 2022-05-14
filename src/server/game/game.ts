@@ -55,7 +55,7 @@ class Game implements IGameControl {
 
     // Update each airplanes position
     Object.keys(this.airplanes).forEach((airplaneID) => {
-      this.airplanes[airplaneID].update()
+      this.airplanes[airplaneID].update(dt)
     })
 
     // Send update to each player

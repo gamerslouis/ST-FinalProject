@@ -17,9 +17,10 @@ export default function initScript() {
       const username = document.getElementById('username-input').value
       try {
         const client = await startClient(username, canvas)
+        document.getElementById('loading-hover').style.display = 'none'
+        document.getElementById('dialog').style.display = 'none'
         client.once('gameEnd', () => {
-          document.getElementById('loading-hover').style.display = 'none'
-          document.getElementById('error-msg').style.display = 'block'
+          document.getElementById('dialog').style.display = 'block'
         })
       } catch (error) {
         document.getElementById('loading-hover').style.display = 'none'

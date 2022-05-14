@@ -1,3 +1,5 @@
+import constants from '../shared/constants'
+
 const Constants = require('../shared/constants')
 
 export default class InputManager {
@@ -26,29 +28,26 @@ export default class InputManager {
   }
 
   handleKeyEvent(event, press) {
-    this.socket.emit(Constants.MSG_TYPES.INPUT, {
-      key: event.key,
-      state: press ? 0 : 1,
-    })
+    if (!event.repeat) {
+      if (event.key === 'ArrowLeft') {
+        this.socket.emit(Constants.MSG_TYPES.INPUT, {
+          key: constants.INPUT_EVENTS.LEFT_ARROW_KEY,
+          state: press ? 0 : 1,
+        })
+      }
+      if (event.key === 'ArrowRight') {
+        this.socket.emit(Constants.MSG_TYPES.INPUT, {
+          key: constants.INPUT_EVENTS.RIGHT_ARROW_KEY,
+          state: press ? 0 : 1,
+        })
+      }
+    }
   }
 
   handleMouseEvent(event, press) {
-    let key
-    switch (event.which) {
-      case 1:
-        key = 'lm'
-        break
-      case 2:
-        key = 'mm'
-        break
-      case 3:
-        key = 'rm'
-        break
-      default:
-    }
-    if (key) {
+    if (event.which === 1) {
       this.socket.emit(Constants.MSG_TYPES.INPUT, {
-        key,
+        key: constants.INPUT_EVENTS.MOUSE,
         state: press ? 0 : 1,
       })
     }

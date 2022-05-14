@@ -10,9 +10,9 @@ export default class Player implements IPlayer {
   id: string
   gameControl: IGameControl
 
-  constructor(socket, gameControl: IGameControl) {
+  constructor(socket: Socket, gameControl: IGameControl) {
     this.socket = socket
-    this.id = randomUUID()
+    this.id = socket.id
     this.gameControl = gameControl
 
     socket.on(Constants.MSG_TYPES.JOIN_GAME, (username) => {
