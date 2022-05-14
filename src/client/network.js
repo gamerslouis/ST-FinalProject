@@ -2,7 +2,7 @@ import { io } from 'socket.io-client'
 
 const socketProtocol = window.location.protocol.includes('https') ? 'wss' : 'ws'
 
-export default class NetworkManager {
+class NetworkManager {
   async connect() {
     this.socket = io(`${socketProtocol}://${window.location.host}`, {
       reconnection: false,
@@ -22,4 +22,10 @@ export default class NetworkManager {
   getSocket() {
     return this.socket
   }
+}
+
+export default async function connect() {
+  const manager = new NetworkManager()
+  await manager.connect()
+  return manager
 }
