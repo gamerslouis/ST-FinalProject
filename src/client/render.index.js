@@ -5,13 +5,13 @@ const playMenu = document.getElementById('dialog')
 playMenu.classList.add('invisible')
 
 const render = new Render(document.getElementById('canvas'), window, () => ({
-  me: {
+  self: {
     x: 0,
     y: 400,
     rot: 0,
     health: 90,
   },
-  spaces: [
+  airplanes: [
     {
       x: 200,
       y: 600,
