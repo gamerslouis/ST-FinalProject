@@ -53,6 +53,7 @@ export default class Render {
   }
 
   render(renderData) {
+    this.context.save()
     // Note : Player itself is located at (canvas.width * 1/2, canvas.height * 1/5)
 
     const { me, spaces, bullets } = renderData
@@ -67,6 +68,7 @@ export default class Render {
 
     // Bullets
     bullets.forEach(this.renderBullet.bind(null, me))
+    this.context.restore()
   }
 
   renderBackground(me) {
