@@ -19,7 +19,7 @@ class Airplane implements IAirplane {
     this.id = playerId
     this.position.x = Constants.PLAYER_ORIGIN_POS_X
     this.position.y = Constants.PLAYER_ORIGIN_POS_Y
-    this.direction = Math.random() * 2 * Math.PI
+    this.direction = ((2 * Math.PI) / 360) * 90
     this.speed = Constants.PLAYER_SPEED
     this.rotation = this.direction
     this.health = Constants.PLAYER_MAX_HP
