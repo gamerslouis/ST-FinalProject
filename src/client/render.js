@@ -55,17 +55,22 @@ export default class Render {
 
   render(renderData) {
     if (renderData === undefined) return
-
-    this.context.save()
-    // Note : Player itself is located at (canvas.width * 1/2, canvas.height * 1/5)
-
+    
     const { self, airplanes, bullets } = renderData
+    
+    this.context.save()
 
-    this.renderBackground(self)
-
+    // Initialize : set airplane as center
     const mycenterX = this.canvas.width / 2
     const mycenterY = (this.canvas.height * 4) / 5
     this.context.translate(mycenterX, mycenterY)
+
+    // Background goes reverse direction
+    this.context.save()
+    this.context.translate(mycenterX, mycenterY)
+    this.context.rotate(-Math.PI)
+    this.renderBackground(self)
+    this.context.restore()
 
     // Player
     this.renderPlayer(self, self, 0)
@@ -76,6 +81,7 @@ export default class Render {
 
     // Bullets
     bullets.forEach(this.renderBullet.bind(null, self))
+    
     this.context.restore()
   }
 
@@ -84,32 +90,31 @@ export default class Render {
 
     const mycenterX = this.canvas.width / 2
     const mycenterY = (this.canvas.height * 4) / 5
-    const backgroundImg = getAsset('background.jpg')
-
+    
     // rotation
     this.context.save()
+
     this.context.translate(mycenterX, mycenterY)
-    this.context.rotate(-rot)
+    this.context.rotate(rot)
     this.context.translate(-mycenterX, -mycenterY)
 
     // Size of background image
-    const bgw = (MAP_SIZE + this.canvas.width) * 2
-    const bgh = (MAP_SIZE + this.canvas.height) * 2
-    const edge = MAP_SIZE / 2
+    const bgw = (MAP_SIZE + this.canvas.width) * 3
+    const bgh = (MAP_SIZE + this.canvas.height) * 3
 
     this.context.drawImage(
-      backgroundImg,
+      getAsset('background.jpg'),
       x,
-      MAP_SIZE - y, // top left corner of img (sx, sy), note that MAP_SIZE = (bgh - canvas.height - y)
-      edge,
-      edge, // How big of the grab
-      -this.canvas.width / 2,
-      -this.canvas.height / 2, // put on the left corner on the window
-      bgw,
-      bgh + edge // size of what was grabed
+      MAP_SIZE - y, // top left corner of img (sx, sy)
+      bgw / 9,
+      bgh / 9, // How big of the grab
+      -this.canvas.width * Math.sqrt(2),
+      -this.canvas.height * Math.sqrt(2), // put on the left corner on the window
+      bgw * Math.sqrt(2),
+      bgh * Math.sqrt(2) // size of what was grabed
     )
+
     this.context.restore()
-    return [x, MAP_SIZE - y]
   }
 
   moveToObjectPos(self, other) {
