@@ -90,10 +90,9 @@ export default class Render {
 
     const mycenterX = this.canvas.width / 2
     const mycenterY = (this.canvas.height * 4) / 5
-    
-    // rotation
-    this.context.save()
 
+    this.context.save()
+    
     this.context.translate(mycenterX, mycenterY)
     this.context.rotate(rot)
     this.context.translate(-mycenterX, -mycenterY)
@@ -170,8 +169,8 @@ export default class Render {
     // Draw the bullet
     this.context.drawImage(
       getAsset('bullet.svg'),
-      -BULLET_RADIUS,
-      -BULLET_RADIUS,
+      -5 * BULLET_RADIUS,
+      -5 * BULLET_RADIUS,
       BULLET_RADIUS * 10,
       BULLET_RADIUS * 10
     )
