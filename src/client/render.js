@@ -84,7 +84,7 @@ export default class Render {
     // rotation
     this.context.save()
     this.context.translate(mycenterX, mycenterY)
-    this.context.rotate(rot)
+    this.context.rotate(-rot)
     this.context.translate(-mycenterX, -mycenterY)
 
     // Size of background image

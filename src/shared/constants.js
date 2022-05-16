@@ -1,10 +1,10 @@
 module.exports = Object.freeze({
   PLAYER_RADIUS: 50,
   PLAYER_MAX_HP: 100,
-  PLAYER_SPEED: 400,
+  PLAYER_SPEED: 50,
   PLAYER_ORIGIN_POS_X: 50,
   PLAYER_ORIGIN_POS_Y: 50,
-  MOVE_DELTA_RAD: ((2 * Math.PI) / 360) * 20,
+  MOVE_DELTA_RAD: ((2 * Math.PI) / 360) * 5,
 
   BULLET_RADIUS: 3,
   BULLET_SPEED: 1000,
