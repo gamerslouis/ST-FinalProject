@@ -25,10 +25,10 @@ class Bullet implements IGameObject {
     this.position.y -= dt * this.speed * Math.cos(this.direction)
 
     return (
-      this.position.x < 0 ||
-      this.position.x > Constants.MAP_SIZE ||
-      this.position.y < 0 ||
-      this.position.y > Constants.MAP_SIZE
+      this.position.x < - 9 * Constants.MAP_SIZE ||
+      this.position.x > 9 * Constants.MAP_SIZE ||
+      this.position.y < - 9 * Constants.MAP_SIZE ||
+      this.position.y > 9 * Constants.MAP_SIZE
     )
   }
   getId(): string {

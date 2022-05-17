@@ -62,10 +62,10 @@ export default class Render {
 
     // Initialize : set airplane as center
     const mycenterX = this.canvas.width / 2
-    const mycenterY = (this.canvas.height * 4) / 5
+    const mycenterY = (this.canvas.height * 9) / 10
     this.context.translate(mycenterX, mycenterY)
 
-    // Background goes reverse direction
+    // Background moves in a reverse direction
     this.context.save()
     this.context.translate(mycenterX, mycenterY)
     this.context.rotate(-Math.PI)
@@ -89,7 +89,7 @@ export default class Render {
     const { x, y, rot } = self
 
     const mycenterX = this.canvas.width / 2
-    const mycenterY = (this.canvas.height * 4) / 5
+    const mycenterY = (this.canvas.height * 9) / 10
 
     this.context.save()
     
