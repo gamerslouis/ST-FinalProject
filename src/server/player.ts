@@ -22,7 +22,7 @@ export default class Player implements IPlayer {
       socket.on('disconnect', () => {
         gameControl.handleDisconnect(this.id)
       })
-      
+
       socket.on(Constants.MSG_TYPES.INPUT, (evt) => {
         gameControl.handleInput(this.id, evt)
       })

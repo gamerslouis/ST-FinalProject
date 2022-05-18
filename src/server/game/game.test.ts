@@ -5,6 +5,7 @@ import Bullet from './bullet'
 import Constants, { MOVE_DELTA_RAD } from '../../shared/constants'
 import { PlayerInputState } from './iGameControl'
 import { PlayerUpdateEventType } from '../iPlayer'
+import { Socket } from 'socket.io'
 
 jest.mock('../player')
 jest.useFakeTimers()
@@ -53,19 +54,23 @@ describe('Game', () => {
     const game = new Game()
     const playerId1 = '123'
     const playerId2 = '456'
-    const socket = {
-      id: '1234',
+    const socket1 = {
       emit: jest.fn(),
-    }
+      disconnect: jest.fn(),
+    } as unknown as Socket
+    const socket2 = {
+      emit: jest.fn(),
+      disconnect: jest.fn(),
+    } as unknown as Socket
     Player.prototype.getId = jest.fn().mockReturnValue(playerId1)
-    const player1 = new Player(playerId1, socket)
+    const player1 = new Player(socket1, game)
     game.addPlayer(player1)
     Player.prototype.getId = jest.fn().mockReturnValue(playerId2)
-    const player2 = new Player(playerId2, socket)
+    const player2 = new Player(socket2, game)
     game.addPlayer(player2)
 
-    jest.spyOn(player1, 'update')
-    jest.spyOn(player2, 'update')
+    jest.spyOn(player1, 'update').mockImplementation(() => {})
+    jest.spyOn(player2, 'update').mockImplementation(() => {})
     game.update()
     expect(player1.update).toBeCalledTimes(1)
     expect(player2.update).toBeCalledTimes(1)
@@ -90,9 +95,13 @@ describe('Game', () => {
   })
 
   it('Add a player with player id', () => {
-    Player.prototype.getId = jest.fn(() => '123')
-    const player = new Player('123', undefined)
     const game = new Game()
+    const socket = {
+      emit: jest.fn(),
+      disconnect: jest.fn(),
+    } as unknown as Socket
+    Player.prototype.getId = jest.fn(() => '123')
+    const player = new Player(socket, game)
     game.addPlayer(player)
     expect(game.players[player.getId()].getId()).toBe('123')
     expect(game.airplanes[player.getId()].getId()).toBe('123')
@@ -100,9 +109,13 @@ describe('Game', () => {
 
   it('Remove the airplanes from game when they die, along with their players', () => {
     const playerId = '123'
+    const socket = {
+      emit: jest.fn(),
+      disconnect: jest.fn(),
+    } as unknown as Socket
     Player.prototype.getId = jest.fn().mockReturnValueOnce('123')
     const game = new Game()
-    const player = new Player(playerId, undefined)
+    const player = new Player(socket, game)
     const airplane = new Airplane(playerId)
     game.players[playerId] = player
     game.airplanes[playerId] = airplane
@@ -115,8 +128,12 @@ describe('Game', () => {
 
   it('Update player when they are removed', () => {
     const playerId = '123'
+    const socket = {
+      emit: jest.fn(),
+      disconnect: jest.fn(),
+    } as unknown as Socket
     const game = new Game()
-    const player = new Player(playerId, undefined)
+    const player = new Player(socket, game)
     game.players[playerId] = player
     jest.spyOn(player, 'update')
     game.removePlayer(playerId)

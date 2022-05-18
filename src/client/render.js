@@ -55,9 +55,9 @@ export default class Render {
 
   render(renderData) {
     if (renderData === undefined) return
-    
+
     const { self, airplanes, bullets } = renderData
-    
+
     this.context.save()
 
     // Initialize : set airplane as center
@@ -81,7 +81,7 @@ export default class Render {
 
     // Bullets
     bullets.forEach(this.renderBullet.bind(null, self))
-    
+
     this.context.restore()
   }
 
@@ -92,7 +92,7 @@ export default class Render {
     const mycenterY = (this.canvas.height * 9) / 10
 
     this.context.save()
-    
+
     this.context.translate(mycenterX, mycenterY)
     this.context.rotate(rot)
     this.context.translate(-mycenterX, -mycenterY)
