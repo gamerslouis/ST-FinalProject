@@ -98,19 +98,33 @@ export default class Render {
     this.context.translate(-mycenterX, -mycenterY)
 
     // Size of background image
-    const bgw = (MAP_SIZE + this.canvas.width) * 3
-    const bgh = (MAP_SIZE + this.canvas.height) * 3
+    const bgw = 0.9 * this.canvas.width
+    const bgh = 0.9 * this.canvas.height
+    const bgh2 = 2 * bgh
 
+    // position (x_, y_)
+    let x_ = x / 2
+    let y_ = (bgh - y) / 2
+
+    // boundary
+    if (y_ < -bgh / 2) {
+      y_ = -bgh / 2
+    }
+    if (x_ > bgw * 4) {
+      x_ = bgw * 4
+    }
+
+    // https://blog.csdn.net/kidoo1012/article/details/75174884
     this.context.drawImage(
       getAsset('background.jpg'),
-      x / 2,
-      (MAP_SIZE - y) / 2, // top left corner of img (sx, sy)
-      bgw / 3,
-      bgh / 3, // How big of the grab
-      -this.canvas.width * Math.sqrt(2),
-      -this.canvas.height * Math.sqrt(2), // put on the left corner on the window
-      bgw * Math.sqrt(2),
-      bgh * Math.sqrt(2) // size of what was grabed
+      x_,
+      y_, //(sx, sy)
+      bgw,
+      bgh2, // (sw, sh)
+      -bgw,
+      -bgh2, // (dx. dy)
+      bgw * 4,
+      bgh2 * 4 // (dw, dh)
     )
 
     this.context.restore()
