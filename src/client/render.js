@@ -103,10 +103,10 @@ export default class Render {
 
     this.context.drawImage(
       getAsset('background.jpg'),
-      x,
-      MAP_SIZE - y, // top left corner of img (sx, sy)
-      bgw / 9,
-      bgh / 9, // How big of the grab
+      x / 2,
+      (MAP_SIZE - y) / 2, // top left corner of img (sx, sy)
+      bgw / 3,
+      bgh / 3, // How big of the grab
       -this.canvas.width * Math.sqrt(2),
       -this.canvas.height * Math.sqrt(2), // put on the left corner on the window
       bgw * Math.sqrt(2),
