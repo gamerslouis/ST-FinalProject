@@ -8,30 +8,31 @@ export default class State {
   constructor() {
     this.gameStart = 0
     this.firstServerTimestamp = 0
+    this.gameUpdates = []
   }
 
   update(updateData) {
     this.updateData = updateData
-    if (!firstServerTimestamp) {
-      firstServerTimestamp = this.updateData.GameUpdateMessage.t //這樣寫?
-      gameStart = Date.now()
+    if (!this.firstServerTimestamp) {
+      this.firstServerTimestamp = this.updateData.GameUpdateMessage.t
+      this.gameStart = Date.now()
     }
-    gameUpdates.push(this.updateData)
+    this.gameUpdates.push(this.updateData)
 
-    const base = getBaseUpdate()
+    const base = this.getBaseUpdate()
     if (base > 0) {
-      gameUpdates.splice(0, base)
+      this.gameUpdates.splice(0, base)
     }
   }
 
   currentServerTime() {
-    return firstServerTimestamp + (Date.now() - gameStart) - RENDER_DELAY
+    return this.firstServerTimestamp + (Date.now() - this.gameStart) - RENDER_DELAY
   }
 
   getBaseUpdate() {
-    const serverTime = currentServerTime()
-    for (let i = gameUpdates.length - 1; i >= 0; i--) {
-      if (gameUpdates[i].t <= serverTime) {
+    const serverTime = this.currentServerTime()
+    for (let i = this.gameUpdates.length - 1; i >= 0; i--) {
+      if (this.gameUpdates[i].t <= serverTime) {
         return i
       }
     }
@@ -39,29 +40,29 @@ export default class State {
   }
 
   getCurrentState() {
-    if (!firstServerTimestamp) {
+    if (!this.firstServerTimestamp) {
       return {}
     }
 
-    const base = getBaseUpdate()
-    const serverTime = currentServerTime()
+    const base = this.getBaseUpdate()
+    const serverTime = this.currentServerTime()
 
-    if (base < 0 || base === gameUpdates.length - 1) {
-      return gameUpdates[gameUpdates.length - 1]
+    if (base < 0 || base === this.gameUpdates.length - 1) {
+      return this.gameUpdates[this.gameUpdates.length - 1]
     } else {
-      const baseUpdate = gameUpdates[base]
-      const next = gameUpdates[base + 1]
+      const baseUpdate = this.gameUpdates[base]
+      const next = this.gameUpdates[base + 1]
       const ratio =
         (serverTime - baseUpdate.GameUpdateMessage.t) /
-        (next.GameUpdateMessage.t - baseUpdate.GameUpdateMessage.t) // t沒有傳
+        (next.GameUpdateMessage.t - baseUpdate.GameUpdateMessage.t)
       return {
-        Loc: interpolateObject(baseUpdate.Loc, next.Loc, ratio),
-        Airplane: interpolateObjectArray(
+        Loc: this.interpolateObject(baseUpdate.Loc, next.Loc, ratio),
+        Airplane: this.interpolateObjectArray(
           baseUpdate.Airplane,
           next.Airplane,
           ratio
         ),
-        GameUpdateMessage: interpolateObjectArray(
+        GameUpdateMessage: this.interpolateObjectArray(
           baseUpdate.GameUpdateMessage,
           next.GameUpdateMessage,
           ratio
@@ -77,8 +78,8 @@ export default class State {
 
     const interpolated = {}
     Object.keys(object1).forEach((key) => {
-      if (key === 'direction') {
-        interpolated[key] = interpolateDirection(
+      if (key === 'rot') {
+        interpolated[key] = this.interpolateDirection(
           object1[key],
           object2[key],
           ratio
@@ -92,7 +93,7 @@ export default class State {
 
   interpolateObjectArray(objects1, objects2, ratio) {
     return objects1.map((o) =>
-      interpolateObject(
+      this.interpolateObject(
         o,
         objects2.find((o2) => o.id === o2.id),
         ratio
