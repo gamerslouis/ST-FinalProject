@@ -2,7 +2,7 @@ import supertest from 'supertest'
 import { parse } from 'node-html-parser'
 import app from './server'
 
-describe('a express server', () => {
+describe('an express server', () => {
   it('should provide robots.txt', async () => {
     const res = await supertest(app).get('/robots.txt')
     expect(res.statusCode).toEqual(200)

@@ -19,7 +19,7 @@ describe('Player class', () => {
     jest.resetAllMocks()
   })
 
-  it('can provide username nad id', () => {
+  it('can provide username and id', () => {
     expect(player.getName()).toBe(username)
     expect(player.getId()).toBeTruthy()
   })

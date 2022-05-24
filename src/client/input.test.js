@@ -39,7 +39,7 @@ describe('Game input manage module', () => {
     )
   }
 
-  it('attatch key&mouse event to send sock event', () => {
+  it('attach key&mouse event to send sock event', () => {
     manager.attach()
     sendEvents()
     expect(socket.emit).toBeCalledTimes(4)

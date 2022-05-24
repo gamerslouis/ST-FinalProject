@@ -73,7 +73,7 @@ describe('Airplane', () => {
     })
 
     describe('Direction', () => {
-      it('Trun left when trunLeft flag is on', () => {
+      it('Turn left when trunLeft flag is on', () => {
         let airplane = new Airplane('123')
         let dt = 1
         const preDirection = airplane.getMoveDirection()
@@ -115,7 +115,7 @@ describe('Airplane', () => {
         expect(airplane.getRotation()).toBeCloseTo(preDirection)
       })
 
-      it('Trun left when trunRight flag is on', () => {
+      it('Turn right when trunRight flag is on', () => {
         let airplane = new Airplane('123')
         let dt = 1
         const preDirection = airplane.getMoveDirection()
