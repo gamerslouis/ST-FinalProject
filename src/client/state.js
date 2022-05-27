@@ -92,10 +92,10 @@ export default class State {
   }
 
   interpolateObjectArray(objects1, objects2, ratio) {
-    return objects1.map((o) =>
+    return Object.values(objects1).map((o) =>
       this.interpolateObject(
         o,
-        objects2.find((o2) => o.id === o2.id),
+        Object.values(objects2).find((o2) => o.id === o2.id),
         ratio
       )
     )

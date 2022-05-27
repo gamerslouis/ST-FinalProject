@@ -1,4 +1,5 @@
 import State from './state'
+import React from 'react'
 const RENDER_DELAY = 100
 
 describe('state', () => {
@@ -82,28 +83,90 @@ describe('state', () => {
   it('getCurrentState if firstServerTimestamp != 0 and base > 0', () => {
     const state = new State()
     state.firstServerTimestamp = 10
+
+    const baseUpdate = {
+      Loc : {
+        x: 10,
+        y: 1,
+        rot: 2,
+      },
+      Airplane : {
+        id: '123',
+        health: 100,
+      },
+      Bullet : {
+        id: '123',
+      },
+      GameUpdateMessage : {
+        t: 100,
+        self: {
+          id: '123',
+          health: 100,
+        },
+        airplanes: [{
+          id: '123',
+          health: 100,
+        }],
+        bullets: [{
+          id: '123',
+        }],
+      },
+    }
+    const next = {
+      Loc : {
+        x: 20,
+        y: 2,
+        rot: 2,
+      },
+      Airplane : {
+        id: '123',
+        health: 100,
+      },
+      Bullet : {
+        id: '123',
+      },
+      GameUpdateMessage : {
+        t: 101,
+        self: {
+          id: '123',
+          health: 100,
+        },
+        airplanes: [{
+          id: '123',
+          health: 100,
+        }],
+        bullets: [{
+          id: '123',
+        }],
+      },
+    }
+    const interpolated = {
+      x: 30,
+      y: 3,
+      rot: 2,
+    }
+
     jest
       .spyOn(state, 'getBaseUpdate')
       .mockImplementation(() => 0)
     jest
       .spyOn(state, 'currentServerTime')
-      .mockImplementation(() => 10000)
+      .mockImplementation(() => 102)
     jest
       .spyOn(state, 'interpolateObject')
-      .mockImplementation(() => 10000)
+      .mockImplementation(() => interpolated)
     jest
       .spyOn(state, 'interpolateObjectArray')
-      .mockImplementation(() => 10000)
-    //state.gameUpdates.push({GameUpdateMessage: {t: 10}})
-    //state.gameUpdates.push({GameUpdateMessage: {t: 100}})
-    /*const object1 = {
-      x: 10,
-      y: 1,
-      rot: 2,
-    }
+      .mockImplementation(() => [1, 2, 2])
+    state.gameUpdates.push(baseUpdate)
+    state.gameUpdates.push(next)
 
     const result = state.getCurrentState()
-    expect(result).toEqual({t: 10})*/
+    expect(result).toEqual({
+      Loc: interpolated,
+      Airplane: [1, 2, 2],
+      GameUpdateMessage: [1, 2, 2],
+    })
   })
 
   it('interpolateObject when object2 is empty', () => {
@@ -160,15 +223,13 @@ describe('state', () => {
       y: 3,
       rot: 2,
     }
-    /*jest
-      .spyOn(state, 'interpolateObject')
-      .mockImplementation(() => interpolated)*/
+    const array = [interpolated, interpolated, interpolated]
     jest
-      .spyOn(state, 'objects1.map')
+      .spyOn(state, 'interpolateObject')
       .mockImplementation(() => interpolated)
 
     const result = state.interpolateObjectArray(object1, object2, 2)
-    expect(result).toEqual(interpolated)
+    expect(result).toEqual(array)
   })
 
   it('all cases of interpolateDirection', () => {
