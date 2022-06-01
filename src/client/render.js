@@ -22,6 +22,8 @@ export default class Render {
     // Bind
     this.render = this.render.bind(this)
     this.renderBackground = this.renderBackground.bind(this)
+    this.renderMap = this.renderMap.bind(this)
+    this.renderMapObj = this.renderMapObj.bind(this)
     this.renderPlayer = this.renderPlayer.bind(this)
     this.renderBullet = this.renderBullet.bind(this)
     this.frameReinder = this.frameReinder.bind(this)
@@ -58,11 +60,12 @@ export default class Render {
 
     const { self, airplanes, bullets } = renderData
 
+    //-------------------------------------------------------
     this.context.save()
 
     // Initialize : set airplane as center
     const mycenterX = this.canvas.width / 2
-    const mycenterY = (this.canvas.height * 9) / 10
+    const mycenterY = (this.canvas.height * 2) / 3
     this.context.translate(mycenterX, mycenterY)
 
     // Background moves in a reverse direction
@@ -74,14 +77,66 @@ export default class Render {
 
     // Player
     this.renderPlayer(self, self, 0)
-    this.context.rotate(-self.rot)
 
-    // airplanes
-    airplanes.forEach((airplane) => this.renderPlayer(self, airplane))
+    // spaceships
+    this.context.save()
+    this.context.rotate(-self.rot)
+    airplanes.forEach((ship) => this.renderPlayer(self, ship))
+    this.context.restore()
 
     // Bullets
+    this.context.save()
+    this.context.rotate(-self.rot)
     bullets.forEach(this.renderBullet.bind(null, self))
+    this.context.restore()
 
+    this.context.restore()
+    //-------------------------------------------------------
+    this.renderMap(self, airplanes)
+  }
+
+  renderMap(self, ships){
+    let w = this.canvas.width
+    let h = this.canvas.height
+    let map_w = w/10
+    let map_h = h/10
+    let obj_w = w/50
+    const { x, y, rot } = self
+    
+    this.context.fillStyle = "black"
+    this.context.globalAlpha = 0.5
+    this.context.fillRect(0, 0, map_w + obj_w, map_h + obj_w)
+    this.context.globalAlpha = 1
+
+    
+    const airplane_img = getAsset('airplane.svg')
+    const ship_img = getAsset('ship.svg')
+
+    this.renderMapObj(airplane_img, self, obj_w)
+    ships.forEach((ship) => this.renderMapObj(ship_img, ship, obj_w))
+    
+  }
+
+  renderMapObj(img, obj, obj_w){
+    const { x, y, rot } = obj
+    let w = this.canvas.width
+    let h = this.canvas.height
+    
+    let map_w = w/10
+    let map_h = h/10
+
+    let myx = map_w * x/MAP_SIZE + 0.5 * obj_w
+    let myy = map_h * (h-y)/MAP_SIZE + 1.5 * obj_w
+    
+    this.context.save()
+    this.context.translate(myx, myy)
+    this.context.rotate(Math.PI - rot)
+    this.context.drawImage(
+        img,
+        -obj_w/2,
+        -obj_w/2,
+        obj_w,  obj_w
+    )
     this.context.restore()
   }
 
@@ -89,7 +144,7 @@ export default class Render {
     const { x, y, rot } = self
 
     const mycenterX = this.canvas.width / 2
-    const mycenterY = (this.canvas.height * 9) / 10
+    const mycenterY = (this.canvas.height * 2) / 3
 
     this.context.save()
 
@@ -98,33 +153,21 @@ export default class Render {
     this.context.translate(-mycenterX, -mycenterY)
 
     // Size of background image
-    const bgw = 0.9 * this.canvas.width
-    const bgh = 0.9 * this.canvas.height
-    const bgh2 = 2 * bgh
-
-    // position (x_, y_)
-    let x_ = x / 2
-    let y_ = (bgh - y) / 2
-
-    // boundary
-    if (y_ < -bgh / 2) {
-      y_ = -bgh / 2
-    }
-    if (x_ > bgw * 4) {
-      x_ = bgw * 4
-    }
+    const bgw = this.canvas.width
+    const bgh = this.canvas.height
 
     // https://blog.csdn.net/kidoo1012/article/details/75174884
+    let edge = Math.sqrt((bgw/2 + 1)**2 + (bgh*2/3 + 1)**2)
     this.context.drawImage(
       getAsset('background.jpg'),
-      x_,
-      y_, //(sx, sy)
-      bgw,
-      bgh2, // (sw, sh)
-      -bgw,
-      -bgh2, // (dx. dy)
-      bgw * 4,
-      bgh2 * 4 // (dw, dh)
+      x,
+      MAP_SIZE - y, //(sx, sy)
+      300,
+      300, // (sw, sh)
+      -(edge - 2/3*bgh),
+      -(edge - 2/3*bgh), // (dx. dy)
+      2 * edge,
+      2 * edge // (dw, dh)
     )
 
     this.context.restore()
