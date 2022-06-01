@@ -22,11 +22,14 @@ export default class Render {
     // Bind
     this.render = this.render.bind(this)
     this.renderBackground = this.renderBackground.bind(this)
-    this.renderMap = this.renderMap.bind(this)
-    this.renderMapObj = this.renderMapObj.bind(this)
     this.renderPlayer = this.renderPlayer.bind(this)
     this.renderBullet = this.renderBullet.bind(this)
     this.frameReinder = this.frameReinder.bind(this)
+
+    // aside
+    this.renderMap = this.renderMap.bind(this)
+    this.renderMapObj = this.renderMapObj.bind(this)
+    this.renderBoard = this.renderBoard.bind(this)
 
     // debug
     this.plotxy - this.plotxy.bind(this)
@@ -105,7 +108,10 @@ export default class Render {
     this.context.restore()
     //-------------------------------------------------------
     this.renderMap(self, airplanes)
+    this.renderBoard(self, airplanes)
   }
+
+  //=====================================================================
 
   renderMap(self, ships) {
     let w = this.canvas.width
@@ -120,8 +126,8 @@ export default class Render {
     this.context.fillRect(0, 0, map_w + obj_w, map_h + obj_w)
     this.context.globalAlpha = 1
 
-    const airplane_img = getAsset('airplane.svg')
-    const ship_img = getAsset('ship.svg')
+    const airplane_img = getAsset('me.svg')
+    const ship_img = getAsset('panda.svg')
 
     this.renderMapObj(airplane_img, self, obj_w)
     ships.forEach((ship) => this.renderMapObj(ship_img, ship, obj_w))
@@ -136,7 +142,7 @@ export default class Render {
     let map_h = h / 10
 
     let myx = (map_w * x) / MAP_SIZE + 0.5 * obj_w
-    let myy = (map_h * (h - y)) / MAP_SIZE + 1.5 * obj_w
+    let myy = (map_h * (h - y)) / MAP_SIZE + 1 * obj_w
 
     this.context.save()
     this.context.translate(myx, myy)
@@ -144,6 +150,27 @@ export default class Render {
     this.context.drawImage(img, -obj_w / 2, -obj_w / 2, obj_w, obj_w)
     this.context.restore()
   }
+
+  renderBoard(self, ships) {
+    let w = this.canvas.width
+    let h = this.canvas.height
+    let map_w = w / 10
+    let map_h = h / 10
+    let obj_w = w / 50
+    const { x, y, rot } = self
+
+    this.context.fillStyle = 'white'
+    this.context.globalAlpha = 0.2
+    this.context.fillRect(0, map_h + obj_w, // x, y
+                          map_w + obj_w, map_h * 2) // sx, sy
+    
+    this.context.globalAlpha = 1
+    const airplane_img = getAsset('me.svg')
+    const ship_img = getAsset('panda.svg')    
+  }
+
+
+  //=====================================================================
 
   renderBackground(self) {
     const { x, y, rot } = self
@@ -177,6 +204,8 @@ export default class Render {
 
     this.context.restore()
   }
+
+  //====================================================================
 
   moveToObjectPos(self, other) {
     const dX = other.x - self.x
