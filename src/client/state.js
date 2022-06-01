@@ -26,7 +26,9 @@ export default class State {
   }
 
   currentServerTime() {
-    return this.firstServerTimestamp + (Date.now() - this.gameStart) - RENDER_DELAY
+    return (
+      this.firstServerTimestamp + (Date.now() - this.gameStart) - RENDER_DELAY
+    )
   }
 
   getBaseUpdate() {

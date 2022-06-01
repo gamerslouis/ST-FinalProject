@@ -3,7 +3,6 @@ import React from 'react'
 const RENDER_DELAY = 100
 
 describe('state', () => {
-
   it('construct state', () => {
     const state = new State()
     expect(state.gameStart).toBe(0)
@@ -20,46 +19,38 @@ describe('state', () => {
 
   it('can store game data and take out if base <= 0', () => {
     const state = new State()
-    jest 
-      .spyOn(state, 'getBaseUpdate')
-      .mockImplementation(() => {})
+    jest.spyOn(state, 'getBaseUpdate').mockImplementation(() => {})
 
-    state.update({GameUpdateMessage: {t: 100}})
+    state.update({ GameUpdateMessage: { t: 100 } })
     expect(state.getBaseUpdate).toHaveBeenCalled()
   })
 
   it('can store game data and take out if base > 0', () => {
     const state = new State()
-    jest 
-      .spyOn(state, 'getBaseUpdate')
-      .mockImplementation(() => 1)
+    jest.spyOn(state, 'getBaseUpdate').mockImplementation(() => 1)
 
-    state.update({GameUpdateMessage: {t: 100}})
+    state.update({ GameUpdateMessage: { t: 100 } })
     expect(state.getBaseUpdate).toHaveBeenCalled()
   })
 
   it('getBaseUpdate can work and nothing in gameUpdates', () => {
     const state = new State()
-    jest
-      .spyOn(state, 'currentServerTime')
-      .mockImplementation(() => {})
+    jest.spyOn(state, 'currentServerTime').mockImplementation(() => {})
     state.getBaseUpdate()
     expect(state.currentServerTime).toHaveBeenCalled()
   })
 
   it('getBaseUpdate can work and something in gameUpdates', () => {
     const state = new State()
-    jest
-      .spyOn(state, 'currentServerTime')
-      .mockImplementation(() => 10000)
-    state.gameUpdates.push({t: 10})
+    jest.spyOn(state, 'currentServerTime').mockImplementation(() => 10000)
+    state.gameUpdates.push({ t: 10 })
     const result = state.getBaseUpdate()
     expect(state.currentServerTime).toHaveBeenCalled()
     expect(result).toBe(0)
   })
 
   it('getCurrentState if firstServerTimestamp = 0', () => {
-    const state = new State()    
+    const state = new State()
     const result = state.getCurrentState()
     expect(result).toEqual({})
   })
@@ -67,17 +58,13 @@ describe('state', () => {
   it('getCurrentState if firstServerTimestamp != 0 and base < 0', () => {
     const state = new State()
     state.firstServerTimestamp = 10
-    jest
-      .spyOn(state, 'getBaseUpdate')
-      .mockImplementation(() => -1)
+    jest.spyOn(state, 'getBaseUpdate').mockImplementation(() => -1)
 
-    jest
-      .spyOn(state, 'currentServerTime')
-      .mockImplementation(() => 10000)
-    state.gameUpdates.push({t: 10})
+    jest.spyOn(state, 'currentServerTime').mockImplementation(() => 10000)
+    state.gameUpdates.push({ t: 10 })
 
     const result = state.getCurrentState()
-    expect(result).toEqual({t: 10})
+    expect(result).toEqual({ t: 10 })
   })
 
   it('getCurrentState if firstServerTimestamp != 0 and base > 0', () => {
@@ -85,59 +72,67 @@ describe('state', () => {
     state.firstServerTimestamp = 10
 
     const baseUpdate = {
-      Loc : {
+      Loc: {
         x: 10,
         y: 1,
         rot: 2,
       },
-      Airplane : {
+      Airplane: {
         id: '123',
         health: 100,
       },
-      Bullet : {
+      Bullet: {
         id: '123',
       },
-      GameUpdateMessage : {
+      GameUpdateMessage: {
         t: 100,
         self: {
           id: '123',
           health: 100,
         },
-        airplanes: [{
-          id: '123',
-          health: 100,
-        }],
-        bullets: [{
-          id: '123',
-        }],
+        airplanes: [
+          {
+            id: '123',
+            health: 100,
+          },
+        ],
+        bullets: [
+          {
+            id: '123',
+          },
+        ],
       },
     }
     const next = {
-      Loc : {
+      Loc: {
         x: 20,
         y: 2,
         rot: 2,
       },
-      Airplane : {
+      Airplane: {
         id: '123',
         health: 100,
       },
-      Bullet : {
+      Bullet: {
         id: '123',
       },
-      GameUpdateMessage : {
+      GameUpdateMessage: {
         t: 101,
         self: {
           id: '123',
           health: 100,
         },
-        airplanes: [{
-          id: '123',
-          health: 100,
-        }],
-        bullets: [{
-          id: '123',
-        }],
+        airplanes: [
+          {
+            id: '123',
+            health: 100,
+          },
+        ],
+        bullets: [
+          {
+            id: '123',
+          },
+        ],
       },
     }
     const interpolated = {
@@ -146,12 +141,8 @@ describe('state', () => {
       rot: 2,
     }
 
-    jest
-      .spyOn(state, 'getBaseUpdate')
-      .mockImplementation(() => 0)
-    jest
-      .spyOn(state, 'currentServerTime')
-      .mockImplementation(() => 102)
+    jest.spyOn(state, 'getBaseUpdate').mockImplementation(() => 0)
+    jest.spyOn(state, 'currentServerTime').mockImplementation(() => 102)
     jest
       .spyOn(state, 'interpolateObject')
       .mockImplementation(() => interpolated)
@@ -182,10 +173,8 @@ describe('state', () => {
 
   it('interpolateObject when object2 is not empty', () => {
     const state = new State()
-    jest
-      .spyOn(state, 'interpolateDirection')
-      .mockImplementation(() => 2)
-    
+    jest.spyOn(state, 'interpolateDirection').mockImplementation(() => 2)
+
     const object1 = {
       x: 10,
       y: 1,
