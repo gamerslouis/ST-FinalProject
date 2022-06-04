@@ -1,27 +1,37 @@
 import { Socket } from 'socket.io'
+import MockedSocket from 'socket.io-mock'
 import { PlayerUpdateEventType } from './iPlayer'
 import Player from './player'
 import constants from '../shared/constants'
+import Game from './game/game'
+const Constants = require('../shared/constants')
+
+jest.mock('./game/game')
 
 describe('Player class', () => {
-  let username: string, socket: Socket
+  const username = 'testuser'
+  const id = 'abcd'
+  let socket: MockedSocket
   let player: Player
+  let game: Game
 
   beforeEach(() => {
-    socket = {
-      emit: jest.fn(),
-      disconnect: jest.fn(),
-    } as unknown as Socket
-    username = 'testuser'
-    player = new Player(username, socket)
+    socket = new MockedSocket()
+    socket.id = id
+    socket.emit = jest.fn()
+    socket.disconnect = jest.fn()
+    game = new Game()
+
+    player = new Player(socket, game)
+    socket.socketClient.emit(Constants.MSG_TYPES.JOIN_GAME, username)
   })
   afterEach(() => {
     jest.resetAllMocks()
   })
 
-  it('can provide username and id', () => {
+  it('can provide username and id and add player to game', () => {
     expect(player.getName()).toBe(username)
-    expect(player.getId()).toBeTruthy()
+    expect(player.getId()).toBe(id)
   })
 
   it('can accept update and send it to client with socketio', () => {
@@ -39,5 +49,12 @@ describe('Player class', () => {
     const disconnectMock = socket.disconnect as jest.MockedFn<any>
     player.close()
     expect(disconnectMock).toBeCalled()
+  })
+
+  it('can recieve event from client and send to game control', () => {
+    socket.socketClient.emit(Constants.MSG_TYPES.INPUT, 'abc')
+    expect(game.handleInput).toBeCalledWith(id, 'abc')
+    socket.socketClient.emit('disconnect')
+    expect(game.handleDisconnect).toBeCalledWith(id)
   })
 })
