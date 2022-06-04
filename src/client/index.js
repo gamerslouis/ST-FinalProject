@@ -1,6 +1,5 @@
 import startClient from './client'
 import { downloadAssets } from './assets'
-import './css/main.css'
 
 // Get the dialog and btn
 const usernameInput = document.getElementById('username-input')

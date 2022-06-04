@@ -52,3 +52,10 @@ body {
     display: inline-block;
     margin: 100px auto;
 }
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: rgb(31, 57, 74);
+}

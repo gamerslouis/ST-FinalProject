@@ -29,12 +29,22 @@ describe('Game input manage module', () => {
     )
     document.body.dispatchEvent(
       new KeyboardEvent('keydown', {
-        key: 'e',
+        key: 'ArrowLeft',
       })
     )
     document.body.dispatchEvent(
       new KeyboardEvent('keyup', {
-        key: 'e',
+        key: 'ArrowLeft',
+      })
+    )
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: 'ArrowRight',
+      })
+    )
+    document.body.dispatchEvent(
+      new KeyboardEvent('keyup', {
+        key: 'ArrowRight',
       })
     )
   }
@@ -42,21 +52,29 @@ describe('Game input manage module', () => {
   it('attach key&mouse event to send sock event', () => {
     manager.attach()
     sendEvents()
-    expect(socket.emit).toBeCalledTimes(4)
+    expect(socket.emit).toBeCalledTimes(6)
     expect(socket.emit).toHaveBeenNthCalledWith(1, constants.MSG_TYPES.INPUT, {
-      key: 'lm',
+      key: 'mouse',
       state: 0,
     })
     expect(socket.emit).toHaveBeenNthCalledWith(2, constants.MSG_TYPES.INPUT, {
-      key: 'lm',
+      key: 'mouse',
       state: 1,
     })
     expect(socket.emit).toHaveBeenNthCalledWith(3, constants.MSG_TYPES.INPUT, {
-      key: 'e',
+      key: 'left_arrow_key',
       state: 0,
     })
     expect(socket.emit).toHaveBeenNthCalledWith(4, constants.MSG_TYPES.INPUT, {
-      key: 'e',
+      key: 'left_arrow_key',
+      state: 1,
+    })
+    expect(socket.emit).toHaveBeenNthCalledWith(3, constants.MSG_TYPES.INPUT, {
+      key: 'right_arrow_key',
+      state: 0,
+    })
+    expect(socket.emit).toHaveBeenNthCalledWith(4, constants.MSG_TYPES.INPUT, {
+      key: 'right_arrow_key',
       state: 1,
     })
   })
