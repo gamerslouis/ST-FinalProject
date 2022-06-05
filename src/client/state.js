@@ -14,7 +14,7 @@ export default class State {
   update(updateData) {
     this.updateData = updateData
     if (!this.firstServerTimestamp) {
-      this.firstServerTimestamp = this.updateData.GameUpdateMessage.t
+      this.firstServerTimestamp = this.updateData.t
       this.gameStart = Date.now()
     }
     this.gameUpdates.push(this.updateData)
@@ -42,31 +42,44 @@ export default class State {
   }
 
   getCurrentState() {
+    //console.log(this.updateData)
     if (!this.firstServerTimestamp) {
-      return {}
+      return this.updateData
     }
-
     const base = this.getBaseUpdate()
     const serverTime = this.currentServerTime()
-
     if (base < 0 || base === this.gameUpdates.length - 1) {
       return this.gameUpdates[this.gameUpdates.length - 1]
     } else {
       const baseUpdate = this.gameUpdates[base]
       const next = this.gameUpdates[base + 1]
       const ratio =
-        (serverTime - baseUpdate.GameUpdateMessage.t) /
-        (next.GameUpdateMessage.t - baseUpdate.GameUpdateMessage.t)
-      return {
-        Loc: this.interpolateObject(baseUpdate.Loc, next.Loc, ratio),
-        Airplane: this.interpolateObjectArray(
-          baseUpdate.Airplane,
-          next.Airplane,
+        (serverTime - baseUpdate.t) /
+        (next.t - baseUpdate.t)
+      
+      /*console.log({
+        self: this.interpolateObject(baseUpdate.self, next.self, ratio),
+        airplanes: this.interpolateObjectArray(
+          baseUpdate.airplanes,
+          next.airplanes,
           ratio
         ),
-        GameUpdateMessage: this.interpolateObjectArray(
-          baseUpdate.GameUpdateMessage,
-          next.GameUpdateMessage,
+        bullets: this.interpolateObjectArray(
+          baseUpdate.bullets,
+          next.bullets,
+          ratio
+        ),
+      })*/
+      return {
+        self: this.interpolateObject(baseUpdate.self, next.self, ratio),
+        airplanes: this.interpolateObjectArray(
+          baseUpdate.airplanes,
+          next.airplanes,
+          ratio
+        ),
+        bullets: this.interpolateObjectArray(
+          baseUpdate.bullets,
+          next.bullets,
           ratio
         ),
       }
