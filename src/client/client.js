@@ -2,7 +2,7 @@ import { EventEmitter } from 'events'
 import connect from './network'
 import InputManager from './input'
 import Render from './render'
-import State from './dummyState'
+import State from './state'
 
 import constants from '../shared/constants'
 

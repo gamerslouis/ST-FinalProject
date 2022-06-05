@@ -1,5 +1,4 @@
 import State from './state'
-import React from 'react'
 const RENDER_DELAY = 100
 
 describe('state', () => {
@@ -51,8 +50,9 @@ describe('state', () => {
 
   it('getCurrentState if firstServerTimestamp = 0', () => {
     const state = new State()
+    state.firstServerTimestamp = 0
     const result = state.getCurrentState()
-    expect(result).toEqual({})
+    expect(result).toBeUndefined()
   })
 
   it('getCurrentState if firstServerTimestamp != 0 and base < 0', () => {
@@ -72,68 +72,38 @@ describe('state', () => {
     state.firstServerTimestamp = 10
 
     const baseUpdate = {
-      Loc: {
+      airplanes: {
+        id: '123',
+        health: 100,
+      },
+      bullets: {
+        id: '123',
+      },
+      self: {
+        health: 100,
+        id: '456',
+        rot: 2,
         x: 10,
         y: 1,
-        rot: 2,
       },
-      Airplane: {
-        id: '123',
-        health: 100,
-      },
-      Bullet: {
-        id: '123',
-      },
-      GameUpdateMessage: {
-        t: 100,
-        self: {
-          id: '123',
-          health: 100,
-        },
-        airplanes: [
-          {
-            id: '123',
-            health: 100,
-          },
-        ],
-        bullets: [
-          {
-            id: '123',
-          },
-        ],
-      },
+      t: 100,
     }
     const next = {
-      Loc: {
-        x: 20,
-        y: 2,
-        rot: 2,
-      },
-      Airplane: {
+      airplanes: {
         id: '123',
         health: 100,
       },
-      Bullet: {
+      bullets: {
         id: '123',
       },
-      GameUpdateMessage: {
-        t: 101,
-        self: {
-          id: '123',
-          health: 100,
-        },
-        airplanes: [
-          {
-            id: '123',
-            health: 100,
-          },
-        ],
-        bullets: [
-          {
-            id: '123',
-          },
-        ],
+      self: {
+        health: 100,
+        id: '456',
+        rot: 2,
+        x: 20,
+        y: 2,
       },
+      t: 101,
     }
     const interpolated = {
       x: 30,
@@ -154,9 +124,9 @@ describe('state', () => {
 
     const result = state.getCurrentState()
     expect(result).toEqual({
-      Loc: interpolated,
-      Airplane: [1, 2, 2],
-      GameUpdateMessage: [1, 2, 2],
+      self: interpolated,
+      airplanes: [1, 2, 2],
+      bullets: [1, 2, 2],
     })
   })
 
