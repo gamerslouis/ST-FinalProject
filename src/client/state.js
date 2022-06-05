@@ -1,14 +1,12 @@
+import Leaderboard from './leaderboard'
 const RENDER_DELAY = 100
-
-const gameUpdates = []
-let gameStart = 0
-let firstServerTimestamp = 0
 
 export default class State {
   constructor() {
     this.gameStart = 0
     this.firstServerTimestamp = 0
     this.gameUpdates = []
+    this.leaderboard = new Leaderboard()
   }
 
   update(updateData) {
@@ -18,6 +16,13 @@ export default class State {
       this.gameStart = Date.now()
     }
     this.gameUpdates.push(this.updateData)
+
+    const dummyLeaderboard = [
+      { username: '123', score: 777 },
+      { username: '456', score: 0 },
+    ]
+    //this.updateLeaderboard(updateData.leaderboard);
+    this.leaderboard.updateLeaderboard(dummyLeaderboard)
 
     const base = this.getBaseUpdate()
     if (base > 0) {
@@ -53,10 +58,8 @@ export default class State {
     } else {
       const baseUpdate = this.gameUpdates[base]
       const next = this.gameUpdates[base + 1]
-      const ratio =
-        (serverTime - baseUpdate.t) /
-        (next.t - baseUpdate.t)
-      
+      const ratio = (serverTime - baseUpdate.t) / (next.t - baseUpdate.t)
+
       /*console.log({
         self: this.interpolateObject(baseUpdate.self, next.self, ratio),
         airplanes: this.interpolateObjectArray(
