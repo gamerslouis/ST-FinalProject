@@ -3,6 +3,7 @@ import connect from './network'
 import InputManager from './input'
 import Render from './render'
 import State from './state'
+import Leaderboard from './leaderboard'
 
 import constants from '../shared/constants'
 
@@ -41,6 +42,9 @@ class Client extends EventEmitter {
       this.clear()
     })
     this.running = true
+
+    this.leaderboard = new Leaderboard()
+    this.leaderboard.setLeaderboardHidden(false)
   }
 
   clear() {
@@ -49,6 +53,8 @@ class Client extends EventEmitter {
       this.input.dettach()
       this.render.stopFrameRendering()
       this.emit('gameEnd')
+
+      this.leaderboard.setLeaderboardHidden(true)
     }
   }
 }
