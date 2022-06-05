@@ -8,7 +8,7 @@ body {
     top: 50%;
     transform: translate(-50%, -50%);
 }
-.model {		
+.model {        
     color: #636363;
     width: 350px;
 }
@@ -33,7 +33,7 @@ body {
 .model .form-control, .model .btn {
     min-height: 40px;
     border-radius: 3px; 
-}	
+}   
 .model .btn {
     color: #fff;
     border-radius: 4px;
@@ -51,6 +51,13 @@ body {
 .trigger-btn {
     display: inline-block;
     margin: 100px auto;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background-color: rgb(31, 57, 74);
 }
 
 .hidden {
