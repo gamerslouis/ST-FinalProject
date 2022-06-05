@@ -52,9 +52,8 @@ class Client extends EventEmitter {
       this.running = false
       this.input.dettach()
       this.render.stopFrameRendering()
-      this.emit('gameEnd')
-
       this.leaderboard.setLeaderboardHidden(true)
+      this.emit('gameEnd')
     }
   }
 }
