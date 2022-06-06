@@ -166,8 +166,7 @@ describe('Game', () => {
     game.bullets.push(bullet)
 
     jest.runOnlyPendingTimers()
-    expect(game.airplanes[attackerId].score).toEqual(Constants.BULLET_DAMAGE);
-    
+    expect(game.airplanes[attackerId].score).toEqual(Constants.BULLET_DAMAGE)
   })
 
   it('Remove the players if they are disconnect to the game', () => {

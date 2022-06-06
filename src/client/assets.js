@@ -5,7 +5,8 @@ const IMG_DIC = {
   'bullet.svg': 'https://www.svgrepo.com/show/178753/bullet-weapons.svg',
   'airplane.svg': 'https://www.svgrepo.com/show/80401/airplane.svg',
   'alien.svg': 'https://www.svgrepo.com/show/217217/alien.svg',
-  'me.svg': 'https://www.svgrepo.com/show/416521/animal-carnivore-cartoon-2.svg',
+  'me.svg':
+    'https://www.svgrepo.com/show/416521/animal-carnivore-cartoon-2.svg',
   'panda.svg': 'https://www.svgrepo.com/show/416520/animal-bear-cartoon.svg',
   'background.jpg':
     'https://img.freepik.com/free-vector/flat-design-planet-collection-around-sun_52683-23859.jpg?t=st=1652535566~exp=1652536166~hmac=860caefc555d6e400d3cf09b96bab5bb246921a7188818cfffd875bc02cdfe74&w=2000',

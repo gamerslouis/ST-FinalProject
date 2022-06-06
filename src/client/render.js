@@ -161,14 +161,17 @@ export default class Render {
 
     this.context.fillStyle = 'white'
     this.context.globalAlpha = 0.2
-    this.context.fillRect(0, map_h + obj_w, // x, y
-                          map_w + obj_w, map_h * 2) // sx, sy
-    
+    this.context.fillRect(
+      0,
+      map_h + obj_w, // x, y
+      map_w + obj_w,
+      map_h * 2
+    ) // sx, sy
+
     this.context.globalAlpha = 1
     const airplane_img = getAsset('me.svg')
-    const ship_img = getAsset('panda.svg')    
+    const ship_img = getAsset('panda.svg')
   }
-
 
   //=====================================================================
 

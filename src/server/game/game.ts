@@ -29,11 +29,11 @@ class Game implements IGameControl {
       Object.values(this.airplanes),
       this.bullets
     )
-    
+
     // Update airplanes score
     destroyedBullets.forEach((bullet) => {
-        if (this.airplanes[bullet.getParentId()] && destroyedBullets.length != 0)
-            this.airplanes[bullet.getParentId()].addScore(Constants.BULLET_DAMAGE)
+      if (this.airplanes[bullet.getParentId()] && destroyedBullets.length != 0)
+        this.airplanes[bullet.getParentId()].addScore(Constants.BULLET_DAMAGE)
     })
 
     this.bullets = this.bullets.filter(
@@ -85,7 +85,7 @@ class Game implements IGameControl {
         self: this.airplanes[playerID].serialize(),
         airplanes: nearbyAirplanes.map((a: any) => a.serialize()),
         bullets: nearbyBullets.map((b: any) => b.serialize()),
-        scoreboard: this.getScoreboard()
+        scoreboard: this.getScoreboard(),
       })
     })
   }
@@ -101,11 +101,16 @@ class Game implements IGameControl {
   }
 
   getScoreboard(): any {
-      return Object.values(this.airplanes)
-                .sort((a1: Airplane, a2: Airplane) => (a2.getScore() > a1.getScore()) ? 1 : -1)
-                .map((a: Airplane) => ({ playerName: this.players[a.getId()].getName(), score: a.getScore()}))
+    return Object.values(this.airplanes)
+      .sort((a1: Airplane, a2: Airplane) =>
+        a2.getScore() > a1.getScore() ? 1 : -1
+      )
+      .map((a: Airplane) => ({
+        playerName: this.players[a.getId()].getName(),
+        score: a.getScore(),
+      }))
   }
-  
+
   handleInput(
     playerId: string,
     event: { key: string; state: PlayerInputState }

@@ -89,11 +89,11 @@ class Airplane implements IAirplane {
   }
 
   getScore(): number {
-    return this.score;
+    return this.score
   }
-  
+
   addScore(score: number) {
-      this.score += score
+    this.score += score
   }
 
   serialize(): any {
