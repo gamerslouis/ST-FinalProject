@@ -188,7 +188,7 @@ describe('Game', () => {
       jest.runOnlyPendingTimers()
 
       game.handleInput(playerID, {
-        key: Constants.INPUT_EVENTS.MOUSE,
+        key: Constants.INPUT_EVENTS.SPACE,
         state: PlayerInputState.Press,
       })
       expect(game.bullets).toHaveLength(1)

@@ -19,6 +19,7 @@ module.exports = Object.freeze({
   },
   INPUT_EVENTS: {
     MOUSE: 'mouse',
+    SPACE: 'space',
     LEFT_ARROW_KEY: 'left_arrow_key',
     RIGHT_ARROW_KEY: 'right_arrow_key',
   },

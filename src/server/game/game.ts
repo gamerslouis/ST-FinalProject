@@ -117,7 +117,7 @@ class Game implements IGameControl {
   ) {
     const airplane = this.airplanes[playerId]
     switch (event.key) {
-      case Constants.INPUT_EVENTS.MOUSE:
+      case Constants.INPUT_EVENTS.SPACE:
         if (event.state == PlayerInputState.Press)
           this.bullets.push(
             new Bullet(
