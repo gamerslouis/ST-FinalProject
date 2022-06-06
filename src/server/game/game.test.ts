@@ -81,6 +81,7 @@ describe('Game', () => {
         self: expect.objectContaining({ id: playerId1 }),
         airplanes: expect.anything(),
         bullets: expect.anything(),
+        scoreboard: expect.anything(),
       })
     )
     expect(player2.update).toBeCalledWith(
@@ -90,6 +91,7 @@ describe('Game', () => {
         self: expect.objectContaining({ id: playerId2 }),
         airplanes: expect.anything(),
         bullets: expect.anything(),
+        scoreboard: expect.anything(),
       })
     )
   })
@@ -150,6 +152,22 @@ describe('Game', () => {
 
     jest.runOnlyPendingTimers()
     expect(game.bullets).toHaveLength(0)
+  })
+
+  it('players get the score when their bullets hit other player', () => {
+    const attackerId = '123'
+    const victimId = '456'
+    const game = new Game()
+    const attacker = new Airplane(attackerId)
+    const victim = new Airplane(victimId)
+    const bullet = new Bullet('123', { x: 50, y: 50 }, 0, 0)
+    game.airplanes[attackerId] = attacker
+    game.airplanes[victimId] = victim
+    game.bullets.push(bullet)
+
+    jest.runOnlyPendingTimers()
+    expect(game.airplanes[attackerId].score).toEqual(Constants.BULLET_DAMAGE);
+    
   })
 
   it('Remove the players if they are disconnect to the game', () => {
