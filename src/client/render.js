@@ -195,8 +195,8 @@ export default class Render {
       500, // (sw, sh)
       -(edge - (2 / 3) * bgh),
       -(edge - (2 / 3) * bgh), // (dx. dy)
-      4 * edge,
-      4 * edge // (dw, dh)
+      3 * edge,
+      3 * edge // (dw, dh)
     )
 
     this.context.restore()
