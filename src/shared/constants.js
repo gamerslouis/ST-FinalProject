@@ -10,6 +10,7 @@ module.exports = Object.freeze({
   BULLET_SPEED: 1000,
   BULLET_DAMAGE: 10,
   MAP_SIZE: 1000,
+  BULLET_RELOAD: 1000,
 
   MSG_TYPES: {
     JOIN_GAME: 'join_game',

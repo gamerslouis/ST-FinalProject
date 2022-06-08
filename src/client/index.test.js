@@ -2,9 +2,17 @@ import initScript from './index'
 import Client from './client'
 
 jest.mock('./client')
+jest.useFakeTimers()
 
 describe('Index page logic', () => {
   beforeAll(() => {
+    global.Image = class {
+      constructor() {
+        setTimeout(() => {
+          this.onload() // simulate success
+        }, 100)
+      }
+    }
     initScript()
   })
   afterEach(() => {
@@ -23,6 +31,7 @@ describe('Index page logic', () => {
         'testuser',
         document.getElementById('canvas')
       )
+      jest.runOnlyPendingTimers()
     }
   )
   it(
