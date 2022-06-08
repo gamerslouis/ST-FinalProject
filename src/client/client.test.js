@@ -3,11 +3,11 @@ import MockedSocket from 'socket.io-mock'
 import startClient from './client'
 
 import constants from '../shared/constants'
-import State from './dummyState'
+import State from './state'
 
 jest.mock('./render')
 jest.mock('socket.io-client')
-jest.mock('./dummyState')
+jest.mock('./state')
 
 describe('client', () => {
   let client
