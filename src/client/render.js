@@ -116,14 +116,15 @@ export default class Render {
   renderMap(self, ships) {
     let w = this.canvas.width
     let h = this.canvas.height
-    let map_w = w / 10
-    let map_h = h / 10
+    let map_w = w / 9
+    let map_h = h / 9
     let obj_w = w / 50
     const { x, y, rot } = self
 
     this.context.fillStyle = 'black'
     this.context.globalAlpha = 0.5
-    this.context.fillRect(0, 0, map_w + obj_w, map_h + obj_w)
+    roundedRectangle(this.context, obj_w / 4, obj_w / 4, map_w + 0.8 * obj_w, map_h + obj_w, 20)
+    this.context.fill();
     this.context.globalAlpha = 1
 
     const airplane_img = getAsset('me.svg')
@@ -145,7 +146,7 @@ export default class Render {
     let myy = (map_h * (h - y)) / MAP_SIZE + 1 * obj_w
 
     this.context.save()
-    this.context.translate(myx, myy)
+    this.context.translate(myx + obj_w / 2, myy + obj_w / 2)
     this.context.rotate(Math.PI - rot)
     this.context.drawImage(img, -obj_w / 2, -obj_w / 2, obj_w, obj_w)
     this.context.restore()
@@ -159,14 +160,7 @@ export default class Render {
     let obj_w = w / 50
     const { x, y, rot } = self
 
-    this.context.fillStyle = 'white'
-    this.context.globalAlpha = 0.2
-    this.context.fillRect(
-      0,
-      map_h + obj_w, // x, y
-      map_w + obj_w,
-      map_h * 2
-    ) // sx, sy
+
 
     this.context.globalAlpha = 1
     const airplane_img = getAsset('me.svg')
@@ -270,4 +264,21 @@ export default class Render {
     )
     this.context.restore()
   }
+}
+
+
+function roundedRectangle(context, x, y, w, h, radius){
+  var r = x + w
+  var b = y + h
+  context.beginPath()
+  context.moveTo(x+radius, y)
+  context.lineTo(r-radius, y)
+  context.quadraticCurveTo(r, y, r, y+radius)
+  context.lineTo(r, y+h-radius)
+  context.quadraticCurveTo(r, b, r-radius, b)
+  context.lineTo(x+radius, b)
+  context.quadraticCurveTo(x, b, x, b-radius)
+  context.lineTo(x, y+radius)
+  context.quadraticCurveTo(x, y, x+radius, y)
+  context.stroke();
 }

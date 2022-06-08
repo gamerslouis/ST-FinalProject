@@ -7,6 +7,8 @@ const Constants = require('../../shared/constants')
 describe('collision', () => {
   it('Should apply damage when bullet collides with player', () => {
     const airplane = new Airplane('1')
+    airplane.position.x = 50
+    airplane.position.y = 50
     const bullet = new Bullet(
       '2',
       { x: 50, y: 50 + Constants.BULLET_RADIUS + Constants.PLAYER_RADIUS },

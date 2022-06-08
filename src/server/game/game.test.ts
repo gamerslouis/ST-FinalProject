@@ -146,7 +146,12 @@ describe('Game', () => {
     const playerId = '123'
     const game = new Game()
     const airplane = new Airplane(playerId)
-    const bullet = new Bullet('456', { x: 50, y: 50 }, 0, 0)
+    const bullet = new Bullet(
+      '456',
+      { x: airplane.getPosition().x, y: airplane.getPosition().y },
+      0,
+      0
+    )
     game.airplanes[playerId] = airplane
     game.bullets.push(bullet)
 
@@ -160,7 +165,12 @@ describe('Game', () => {
     const game = new Game()
     const attacker = new Airplane(attackerId)
     const victim = new Airplane(victimId)
-    const bullet = new Bullet('123', { x: 50, y: 50 }, 0, 0)
+    const bullet = new Bullet(
+      '123',
+      { x: victim.getPosition().x, y: victim.getPosition().y },
+      0,
+      0
+    )
     game.airplanes[attackerId] = attacker
     game.airplanes[victimId] = victim
     game.bullets.push(bullet)
