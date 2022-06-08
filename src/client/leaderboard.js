@@ -5,18 +5,20 @@ const rows = document.querySelectorAll('#leaderboard table tr')
 
 export default class Leaderboard {
   updateLeaderboard(data) {
-    for (let i = 0; i < data.length; i++) {
+    this.data = data
+    for (let i = 0; i < Object.values(this.data).length; i++) {
       rows[i + 1].innerHTML = `<td>${
-        escape(data[i].username.slice(0, 15)) || 'Anonymous'
-      }</td><td>${data[i].score}</td>`
+        escape(Object.values(this.data)[i].playerName) || 'Anonymous'
+      }</td><td>${Object.values(this.data)[i].score}</td>`
     }
-    for (let i = data.length; i < 5; i++) {
+    for (let i = Object.values(this.data).length; i < 5; i++) {
       rows[i + 1].innerHTML = '<td>-</td><td>-</td>'
     }
   }
 
   setLeaderboardHidden(hidden) {
-    if (hidden) {
+    this.hidden = hidden
+    if (this.hidden) {
       leaderboard.classList.add('hidden')
     } else {
       leaderboard.classList.remove('hidden')

@@ -1,3 +1,4 @@
+import Leaderboard from './leaderboard'
 import State from './state'
 const RENDER_DELAY = 100
 
@@ -18,17 +19,21 @@ describe('state', () => {
 
   it('can store game data and take out if base <= 0', () => {
     const state = new State()
+    const leaderboard = new Leaderboard()
     jest.spyOn(state, 'getBaseUpdate').mockImplementation(() => {})
+    jest.spyOn(leaderboard, 'updateLeaderboard').mockImplementation(() => {})
 
-    state.update({ GameUpdateMessage: { t: 100 } })
+    state.update({ GameUpdateMessage: { t: 100 },  scoreboard: { playerName: "123", score: 0}})
     expect(state.getBaseUpdate).toHaveBeenCalled()
   })
 
   it('can store game data and take out if base > 0', () => {
     const state = new State()
+    const leaderboard = new Leaderboard()
     jest.spyOn(state, 'getBaseUpdate').mockImplementation(() => 1)
+    jest.spyOn(leaderboard, 'updateLeaderboard').mockImplementation(() => {})
 
-    state.update({ GameUpdateMessage: { t: 100 } })
+    state.update({ GameUpdateMessage: { t: 100 },  scoreboard: { playerName: "123", score: 0}})
     expect(state.getBaseUpdate).toHaveBeenCalled()
   })
 
