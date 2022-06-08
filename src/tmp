@@ -22,17 +22,11 @@ export default class Render {
     // Bind
     this.render = this.render.bind(this)
     this.renderBackground = this.renderBackground.bind(this)
+    this.renderMap = this.renderMap.bind(this)
+    this.renderMapObj = this.renderMapObj.bind(this)
     this.renderPlayer = this.renderPlayer.bind(this)
     this.renderBullet = this.renderBullet.bind(this)
     this.frameReinder = this.frameReinder.bind(this)
-
-    // aside
-    this.renderMap = this.renderMap.bind(this)
-    this.renderMapObj = this.renderMapObj.bind(this)
-    this.renderBoard = this.renderBoard.bind(this)
-
-    // debug
-    this.plotxy - this.plotxy.bind(this)
   }
 
   startFrameRendering() {
@@ -61,13 +55,6 @@ export default class Render {
     this.canvas.height = scaleRatio * this.window.innerHeight
   }
 
-  plotxy(self) {
-    this.context.fillStyle = 'red'
-    this.context.fillRect(0, 0, 100, 10)
-    this.context.fillStyle = 'green'
-    this.context.fillRect(0, 0, 10, 100)
-  }
-
   render(renderData) {
     if (renderData === undefined) return
 
@@ -93,14 +80,12 @@ export default class Render {
 
     // spaceships
     this.context.save()
-    this.context.scale(-1, 1) //!!!
     this.context.rotate(-self.rot)
     airplanes.forEach((ship) => this.renderPlayer(self, ship))
     this.context.restore()
 
     // Bullets
     this.context.save()
-    this.context.scale(-1, 1) //!!!
     this.context.rotate(-self.rot)
     bullets.forEach(this.renderBullet.bind(null, self))
     this.context.restore()
@@ -108,66 +93,52 @@ export default class Render {
     this.context.restore()
     //-------------------------------------------------------
     this.renderMap(self, airplanes)
-    this.renderBoard(self, airplanes)
   }
 
-  //=====================================================================
-
-  renderMap(self, ships) {
+  renderMap(self, ships){
     let w = this.canvas.width
     let h = this.canvas.height
-    let map_w = w / 9
-    let map_h = h / 9
-    let obj_w = w / 50
+    let map_w = w/10
+    let map_h = h/10
+    let obj_w = w/50
     const { x, y, rot } = self
-
-    this.context.fillStyle = 'black'
+    
+    this.context.fillStyle = "black"
     this.context.globalAlpha = 0.5
-    roundedRectangle(this.context, obj_w / 4, obj_w / 3, map_w + 0.8 * obj_w, map_h + obj_w, 20)
-    this.context.fill();
+    this.context.fillRect(0, 0, map_w + obj_w, map_h + obj_w)
     this.context.globalAlpha = 1
 
-    const airplane_img = getAsset('me.svg')
-    const ship_img = getAsset('panda.svg')
+    
+    const airplane_img = getAsset('airplane.svg')
+    const ship_img = getAsset('ship.svg')
 
     this.renderMapObj(airplane_img, self, obj_w)
     ships.forEach((ship) => this.renderMapObj(ship_img, ship, obj_w))
+    
   }
 
-  renderMapObj(img, obj, obj_w) {
+  renderMapObj(img, obj, obj_w){
     const { x, y, rot } = obj
     let w = this.canvas.width
     let h = this.canvas.height
+    
+    let map_w = w/10
+    let map_h = h/10
 
-    let map_w = w / 10
-    let map_h = h / 10
-
-    let myx = (map_w * x) / MAP_SIZE + 0.5 * obj_w
-    let myy = (map_h * (h - y)) / MAP_SIZE + 1 * obj_w
-
+    let myx = map_w * x/MAP_SIZE + 0.5 * obj_w
+    let myy = map_h * (h-y)/MAP_SIZE + 1.5 * obj_w
+    
     this.context.save()
-    this.context.translate(myx + obj_w / 2, myy + obj_w / 2)
+    this.context.translate(myx, myy)
     this.context.rotate(Math.PI - rot)
-    this.context.drawImage(img, -obj_w / 2, -obj_w / 2, obj_w, obj_w)
+    this.context.drawImage(
+        img,
+        -obj_w/2,
+        -obj_w/2,
+        obj_w,  obj_w
+    )
     this.context.restore()
   }
-
-  renderBoard(self, ships) {
-    let w = this.canvas.width
-    let h = this.canvas.height
-    let map_w = w / 10
-    let map_h = h / 10
-    let obj_w = w / 50
-    const { x, y, rot } = self
-
-
-
-    this.context.globalAlpha = 1
-    const airplane_img = getAsset('me.svg')
-    const ship_img = getAsset('panda.svg')
-  }
-
-  //=====================================================================
 
   renderBackground(self) {
     const { x, y, rot } = self
@@ -186,23 +157,21 @@ export default class Render {
     const bgh = this.canvas.height
 
     // https://blog.csdn.net/kidoo1012/article/details/75174884
-    let edge = Math.sqrt((bgw / 2 + 1) ** 2 + ((bgh * 2) / 3 + 1) ** 2)
+    let edge = Math.sqrt((bgw/2 + 1)**2 + (bgh*2/3 + 1)**2)
     this.context.drawImage(
       getAsset('background.jpg'),
       x,
       MAP_SIZE - y, //(sx, sy)
-      500,
-      500, // (sw, sh)
-      -(edge - (2 / 3) * bgh),
-      -(edge - (2 / 3) * bgh), // (dx. dy)
-      4 * edge,
-      4 * edge // (dw, dh)
+      300,
+      300, // (sw, sh)
+      -(edge - 2/3*bgh),
+      -(edge - 2/3*bgh), // (dx. dy)
+      2 * edge,
+      2 * edge // (dw, dh)
     )
 
     this.context.restore()
   }
-
-  //====================================================================
 
   moveToObjectPos(self, other) {
     const dX = other.x - self.x
@@ -264,23 +233,4 @@ export default class Render {
     )
     this.context.restore()
   }
-}
-
-
-function roundedRectangle(context, x, y, w, h, radius){
-  var r = x + w
-  var b = y + h
-  
-  context.beginPath()
-  context.moveTo(x+radius, y)
-  context.lineTo(r-radius, y)
-  context.quadraticCurveTo(r, y, r, y+radius)
-  context.lineTo(r, y+h-radius)
-  context.quadraticCurveTo(r, b, r-radius, b)
-  context.lineTo(x+radius, b)
-  context.quadraticCurveTo(x, b, x, b-radius)
-  context.lineTo(x, y+radius)
-  context.quadraticCurveTo(x, y, x+radius, y)
-  //context.strokeStyle="white"
-  context.stroke();
 }
