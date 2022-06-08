@@ -123,7 +123,7 @@ export default class Render {
 
     this.context.fillStyle = 'black'
     this.context.globalAlpha = 0.5
-    roundedRectangle(this.context, obj_w / 4, obj_w / 4, map_w + 0.8 * obj_w, map_h + obj_w, 20)
+    roundedRectangle(this.context, obj_w / 4, obj_w / 3, map_w + 0.8 * obj_w, map_h + obj_w, 20)
     this.context.fill();
     this.context.globalAlpha = 1
 
@@ -191,12 +191,12 @@ export default class Render {
       getAsset('background.jpg'),
       x,
       MAP_SIZE - y, //(sx, sy)
-      300,
-      300, // (sw, sh)
+      500,
+      500, // (sw, sh)
       -(edge - (2 / 3) * bgh),
       -(edge - (2 / 3) * bgh), // (dx. dy)
-      2 * edge,
-      2 * edge // (dw, dh)
+      3 * edge,
+      3 * edge // (dw, dh)
     )
 
     this.context.restore()
@@ -270,6 +270,7 @@ export default class Render {
 function roundedRectangle(context, x, y, w, h, radius){
   var r = x + w
   var b = y + h
+  
   context.beginPath()
   context.moveTo(x+radius, y)
   context.lineTo(r-radius, y)
@@ -280,5 +281,6 @@ function roundedRectangle(context, x, y, w, h, radius){
   context.quadraticCurveTo(x, b, x, b-radius)
   context.lineTo(x, y+radius)
   context.quadraticCurveTo(x, y, x+radius, y)
+  //context.strokeStyle="white"
   context.stroke();
 }
