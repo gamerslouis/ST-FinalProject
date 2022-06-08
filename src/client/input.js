@@ -1,4 +1,3 @@
-import { throttle } from 'throttle-debounce'
 import constants from '../shared/constants'
 
 const Constants = require('../shared/constants')
@@ -12,10 +11,7 @@ export default class InputManager {
     this.handleKeyUpEvent = (e) => this.handleKeyEvent(e, false)
     this.handleMouseDownEvent = (e) => this.handleMouseEvent(e, true)
     this.handleMouseUpEvent = (e) => this.handleMouseEvent(e, false)
-    this.throttleEmit = throttle(1000, this.socket.emit, {
-      noLeading: false,
-      noTrailing: false,
-    })
+    this.lastAttack = Date.now()
   }
 
   attach() {
@@ -47,10 +43,13 @@ export default class InputManager {
         })
       }
       if (event.key === ' ') {
-        this.throttleEmit(Constants.MSG_TYPES.INPUT, {
-          key: constants.INPUT_EVENTS.SPACE,
-          state: press ? 0 : 1,
-        })
+        if (Date.now() - this.lastAttack > constants.BULLET_RELOAD) {
+          this.socket.emit(Constants.MSG_TYPES.INPUT, {
+            key: constants.INPUT_EVENTS.SPACE,
+            state: press ? 0 : 1,
+          })
+          this.lastAttack = Date.now()
+        }
       }
     }
   }
