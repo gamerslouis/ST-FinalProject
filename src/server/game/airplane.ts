@@ -18,8 +18,8 @@ class Airplane implements IAirplane {
 
   constructor(playerId: string) {
     this.id = playerId
-    this.position.x = Constants.PLAYER_ORIGIN_POS_X
-    this.position.y = Constants.PLAYER_ORIGIN_POS_Y
+    this.position.x = Math.random() * Constants.MAP_SIZE
+    this.position.y = Math.random() * Constants.MAP_SIZE
     this.direction = ((2 * Math.PI) / 360) * 90
     this.speed = Constants.PLAYER_SPEED
     this.rotation = this.direction

@@ -23,7 +23,10 @@ describe('state', () => {
     jest.spyOn(state, 'getBaseUpdate').mockImplementation(() => {})
     jest.spyOn(leaderboard, 'updateLeaderboard').mockImplementation(() => {})
 
-    state.update({ GameUpdateMessage: { t: 100 },  scoreboard: { playerName: "123", score: 0}})
+    state.update({
+      GameUpdateMessage: { t: 100 },
+      scoreboard: { playerName: '123', score: 0 },
+    })
     expect(state.getBaseUpdate).toHaveBeenCalled()
   })
 
@@ -33,7 +36,10 @@ describe('state', () => {
     jest.spyOn(state, 'getBaseUpdate').mockImplementation(() => 1)
     jest.spyOn(leaderboard, 'updateLeaderboard').mockImplementation(() => {})
 
-    state.update({ GameUpdateMessage: { t: 100 },  scoreboard: { playerName: "123", score: 0}})
+    state.update({
+      GameUpdateMessage: { t: 100 },
+      scoreboard: { playerName: '123', score: 0 },
+    })
     expect(state.getBaseUpdate).toHaveBeenCalled()
   })
 

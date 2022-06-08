@@ -21,7 +21,7 @@ export default class State {
       { username: '123', score: 777 },
       { username: '456', score: 0 },
     ]
-    this.leaderboard.updateLeaderboard(updateData.scoreboard);
+    this.leaderboard.updateLeaderboard(updateData.scoreboard)
     //this.leaderboard.updateLeaderboard(dummyLeaderboard)
 
     const base = this.getBaseUpdate()

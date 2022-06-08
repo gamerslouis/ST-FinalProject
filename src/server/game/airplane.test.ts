@@ -65,8 +65,8 @@ describe('Airplane', () => {
       let airplane = new Airplane('123')
       expect(airplane.serialize()).toEqual({
         id: airplane.getId(),
-        x: 50,
-        y: 50,
+        x: airplane.getPosition().x,
+        y: airplane.getPosition().y,
         rot: airplane.rotation,
         health: Constants.PLAYER_MAX_HP,
       })
