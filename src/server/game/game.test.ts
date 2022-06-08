@@ -69,6 +69,9 @@ describe('Game', () => {
     const player2 = new Player(socket2, game)
     game.addPlayer(player2)
 
+    const bullet = new Bullet('123', { x: 50, y: 50 }, 1, 200)
+    game.bullets.push(bullet)
+
     jest.spyOn(player1, 'update').mockImplementation(() => {})
     jest.spyOn(player2, 'update').mockImplementation(() => {})
     game.update()
@@ -251,6 +254,21 @@ describe('Game', () => {
       expect(game.airplanes[playerID].control.turnRight).toBe(
         PlayerInputState.Release
       )
+    })
+
+    describe('Ignore non-valid input event', () => {
+      it('Mouse', () => {
+        const game = new Game()
+        const playerID = '123'
+        const airplane = new Airplane(playerID)
+        const airplane1 = airplane
+        game.airplanes[playerID] = airplane
+        game.handleInput(playerID, {
+          key: Constants.INPUT_EVENTS.Mouse,
+          state: PlayerInputState.Press,
+        })
+        expect(airplane).toMatchObject(airplane1)
+      })
     })
   })
 })

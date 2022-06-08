@@ -161,8 +161,6 @@ export default class Render {
     let obj_w = w / 50
     const { x, y, rot } = self
 
-
-
     this.context.globalAlpha = 1
     const airplane_img = getAsset('me.svg')
     const ship_img = getAsset('panda.svg')
@@ -267,8 +265,7 @@ export default class Render {
   }
 }
 
-
-function roundedRectangle(context, x, y, w, h, radius){
+function roundedRectangle(context, x, y, w, h, radius) {
   var r = x + w
   var b = y + h
   

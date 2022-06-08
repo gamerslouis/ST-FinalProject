@@ -50,7 +50,7 @@ class Bullet implements IGameObject {
     return this.rotation
   }
   setRotation(newRotation: number) {
-    this.rotation += newRotation
+    throw new Error('Method not implemented.')
   }
   getSpeed(): number {
     return this.speed

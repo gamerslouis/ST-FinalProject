@@ -1,5 +1,6 @@
 import { Position } from './iGameObject'
 import Bullet from './bullet'
+import { posix } from 'path'
 const Constants = require('../../shared/constants')
 
 describe('bullet', () => {
@@ -48,5 +49,48 @@ describe('bullet', () => {
     expect(bullet.getPosition().y).toBeCloseTo(
       prePos.y - dt * speed * Math.cos(direction)
     )
+  })
+  it('DistanceTo calculate correct', () => {
+    let speed = Constants.BULLET_SPEED
+    let pos: Position = { x: 50, y: 60 }
+    let direction = ((2 * Math.PI) / 360) * 30
+    let bullet = new Bullet('123', pos, direction, speed)
+    let targetPositionX = 100
+    let targetPositionY = 200
+    let dx = pos.x - targetPositionX
+    let dy = pos.y - targetPositionY
+    expect(
+      bullet.distanceTo({ x: targetPositionX, y: targetPositionY })
+    ).toBeCloseTo(Math.sqrt(dx * dx + dy * dy))
+  })
+
+  it('Serialize data checking', () => {
+    let speed = Constants.BULLET_SPEED
+    let pos: Position = { x: 50, y: 60 }
+    let direction = ((2 * Math.PI) / 360) * 30
+    let bullet = new Bullet('123', pos, direction, speed)
+    expect(bullet.serialize()).toEqual({
+      id: bullet.getId(),
+      x: bullet.getPosition().x,
+      y: bullet.getPosition().y,
+      rot: bullet.rotation,
+    })
+  })
+
+  describe('Non-use interface need to throw error', () => {
+    it('setRotation', () => {
+      let speed = Constants.BULLET_SPEED
+      let prePos: Position = { x: 50, y: 60 }
+      let direction = ((2 * Math.PI) / 360) * 30
+      let bullet = new Bullet('123', prePos, direction, speed)
+      expect(bullet.setRotation).toThrowError('Method')
+    })
+    it('setMoveDirection', () => {
+      let speed = Constants.BULLET_SPEED
+      let prePos: Position = { x: 50, y: 60 }
+      let direction = ((2 * Math.PI) / 360) * 30
+      let bullet = new Bullet('123', prePos, direction, speed)
+      expect(bullet.setMoveDirection).toThrowError('Method')
+    })
   })
 })
