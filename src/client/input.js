@@ -41,6 +41,12 @@ export default class InputManager {
           state: press ? 0 : 1,
         })
       }
+      if (event.key === ' ') {
+        this.socket.emit(Constants.MSG_TYPES.INPUT, {
+          key: constants.INPUT_EVENTS.SPACE,
+          state: press ? 0 : 1,
+        })
+      }
     }
   }
 
