@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { debounce } from 'throttle-debounce'
 import { getAsset } from './assets'
 
