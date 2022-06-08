@@ -118,15 +118,17 @@ class Game implements IGameControl {
     const airplane = this.airplanes[playerId]
     switch (event.key) {
       case Constants.INPUT_EVENTS.SPACE:
-        if (event.state == PlayerInputState.Press)
-          this.bullets.push(
-            new Bullet(
-              playerId,
-              airplane.getPosition(),
-              airplane.getMoveDirection(),
-              Constants.BULLET_SPEED
-            )
-          )
+        if (event.state == PlayerInputState.Press) {
+            if (airplane)
+                this.bullets.push(
+                new Bullet(
+                    playerId,
+                    airplane.getPosition(),
+                    airplane.getMoveDirection(),
+                    Constants.BULLET_SPEED
+                )
+                )
+        }
         break
       case Constants.INPUT_EVENTS.LEFT_ARROW_KEY:
         this.airplanes[playerId].control.turnLeft = event.state
