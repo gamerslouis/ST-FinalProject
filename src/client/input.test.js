@@ -69,11 +69,11 @@ describe('Game input manage module', () => {
       key: 'left_arrow_key',
       state: 1,
     })
-    expect(socket.emit).toHaveBeenNthCalledWith(3, constants.MSG_TYPES.INPUT, {
+    expect(socket.emit).toHaveBeenNthCalledWith(5, constants.MSG_TYPES.INPUT, {
       key: 'right_arrow_key',
       state: 0,
     })
-    expect(socket.emit).toHaveBeenNthCalledWith(4, constants.MSG_TYPES.INPUT, {
+    expect(socket.emit).toHaveBeenNthCalledWith(6, constants.MSG_TYPES.INPUT, {
       key: 'right_arrow_key',
       state: 1,
     })
