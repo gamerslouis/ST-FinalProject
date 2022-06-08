@@ -1,6 +1,8 @@
 import constants from '../shared/constants'
 import InputManager from './input'
 
+jest.useFakeTimers().setSystemTime(new Date('2020-01-01'))
+
 describe('Game input manage module', () => {
   let socket
   let manager
@@ -47,12 +49,23 @@ describe('Game input manage module', () => {
         key: 'ArrowRight',
       })
     )
+    jest.setSystemTime(new Date('2020-01-02'))
+    document.body.dispatchEvent(
+      new KeyboardEvent('keydown', {
+        key: ' ',
+      })
+    )
+    document.body.dispatchEvent(
+      new KeyboardEvent('keyup', {
+        key: ' ',
+      })
+    )
   }
 
   it('attach key&mouse event to send sock event', () => {
     manager.attach()
     sendEvents()
-    expect(socket.emit).toBeCalledTimes(6)
+    expect(socket.emit).toBeCalledTimes(8)
     expect(socket.emit).toHaveBeenNthCalledWith(1, constants.MSG_TYPES.INPUT, {
       key: 'mouse',
       state: 0,

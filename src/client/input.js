@@ -43,7 +43,7 @@ export default class InputManager {
         })
       }
       if (event.key === ' ') {
-        if (Date.now() - this.lastAttack > constants.BULLET_RELOAD) {
+        if (Date.now() - this.lastAttack > constants.BULLET_RELOAD || !press) {
           this.socket.emit(Constants.MSG_TYPES.INPUT, {
             key: constants.INPUT_EVENTS.SPACE,
             state: press ? 0 : 1,
