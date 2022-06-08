@@ -123,8 +123,15 @@ export default class Render {
 
     this.context.fillStyle = 'black'
     this.context.globalAlpha = 0.5
-    roundedRectangle(this.context, obj_w / 4, obj_w / 4, map_w + 0.8 * obj_w, map_h + obj_w, 20)
-    this.context.fill();
+    roundedRectangle(
+      this.context,
+      obj_w / 4,
+      obj_w / 4,
+      map_w + 0.8 * obj_w,
+      map_h + obj_w,
+      20
+    )
+    this.context.fill()
     this.context.globalAlpha = 1
 
     const airplane_img = getAsset('me.svg')
@@ -159,8 +166,6 @@ export default class Render {
     let map_h = h / 10
     let obj_w = w / 50
     const { x, y, rot } = self
-
-
 
     this.context.globalAlpha = 1
     const airplane_img = getAsset('me.svg')
@@ -266,19 +271,18 @@ export default class Render {
   }
 }
 
-
-function roundedRectangle(context, x, y, w, h, radius){
+function roundedRectangle(context, x, y, w, h, radius) {
   var r = x + w
   var b = y + h
   context.beginPath()
-  context.moveTo(x+radius, y)
-  context.lineTo(r-radius, y)
-  context.quadraticCurveTo(r, y, r, y+radius)
-  context.lineTo(r, y+h-radius)
-  context.quadraticCurveTo(r, b, r-radius, b)
-  context.lineTo(x+radius, b)
-  context.quadraticCurveTo(x, b, x, b-radius)
-  context.lineTo(x, y+radius)
-  context.quadraticCurveTo(x, y, x+radius, y)
-  context.stroke();
+  context.moveTo(x + radius, y)
+  context.lineTo(r - radius, y)
+  context.quadraticCurveTo(r, y, r, y + radius)
+  context.lineTo(r, y + h - radius)
+  context.quadraticCurveTo(r, b, r - radius, b)
+  context.lineTo(x + radius, b)
+  context.quadraticCurveTo(x, b, x, b - radius)
+  context.lineTo(x, y + radius)
+  context.quadraticCurveTo(x, y, x + radius, y)
+  context.stroke()
 }

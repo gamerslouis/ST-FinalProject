@@ -1,3 +1,4 @@
+import exp from 'constants'
 import Airplane from './airplane'
 import { PlayerInputState } from './iGameControl'
 import { Position } from './iGameObject'
@@ -132,6 +133,16 @@ describe('Airplane', () => {
           preDirection - Constants.MOVE_DELTA_RAD
         )
       })
+    })
+  })
+  describe('Non-use interface need to throw error', () => {
+    it('SetPosition', () => {
+      let airplane = new Airplane('123')
+      expect(airplane.setPosition).toThrowError('Method')
+    })
+    it('SetSpeed', () => {
+      let airplane = new Airplane('123')
+      expect(airplane.setSpeed).toThrowError('Method')
     })
   })
 })
