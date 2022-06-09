@@ -1,8 +1,6 @@
 import constants from '../shared/constants'
 import InputManager from './input'
 
-jest.useFakeTimers().setSystemTime(new Date('2020-01-01'))
-
 describe('Game input manage module', () => {
   let socket
   let manager
@@ -49,7 +47,6 @@ describe('Game input manage module', () => {
         key: 'ArrowRight',
       })
     )
-    jest.setSystemTime(new Date('2020-01-02'))
     document.body.dispatchEvent(
       new KeyboardEvent('keydown', {
         key: ' ',

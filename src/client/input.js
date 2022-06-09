@@ -11,7 +11,6 @@ export default class InputManager {
     this.handleKeyUpEvent = (e) => this.handleKeyEvent(e, false)
     this.handleMouseDownEvent = (e) => this.handleMouseEvent(e, true)
     this.handleMouseUpEvent = (e) => this.handleMouseEvent(e, false)
-    this.lastAttack = Date.now()
   }
 
   attach() {
@@ -43,13 +42,10 @@ export default class InputManager {
         })
       }
       if (event.key === ' ') {
-        if (Date.now() - this.lastAttack > constants.BULLET_RELOAD || !press) {
-          this.socket.emit(Constants.MSG_TYPES.INPUT, {
-            key: constants.INPUT_EVENTS.SPACE,
-            state: press ? 0 : 1,
-          })
-          this.lastAttack = Date.now()
-        }
+        this.socket.emit(Constants.MSG_TYPES.INPUT, {
+          key: constants.INPUT_EVENTS.SPACE,
+          state: press ? 0 : 1,
+        })
       }
     }
   }
