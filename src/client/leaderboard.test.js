@@ -12,17 +12,20 @@ describe('leaderboard', () => {
     ]
 
     leaderboard.updateLeaderboard(dummyLeaderboard)
+    expect(leaderboard.data).toBe(dummyLeaderboard)
   })
 
   it('should remove the class', () => {
     const leaderboard = new Leaderboard()
 
     leaderboard.setLeaderboardHidden(true)
+    expect(leaderboard.hidden).toBe(true)
   })
 
   it('should add the class', () => {
     const leaderboard = new Leaderboard()
 
     leaderboard.setLeaderboardHidden(false)
+    expect(leaderboard.hidden).toBe(false)
   })
 })
